@@ -406,20 +406,17 @@ public:
             // const auto& decode_entry = decoding_table[state];
             size_t table_index = state - block_size;
 
-            // Проверяем границы ПЕРЕД использованием
             if (table_index >= decoding_table.size())
             {
                 throw std::out_of_range("Decoding table index out of bounds");
             }
 
-            // Получаем символ из таблицы декодирования или используем другой способ
-            // Здесь нужно понять, как именно вы хотите получать символ
             if (table_index >= our_labels.length())
             {
                 throw std::out_of_range("State index out of bounds during decoding");
             }
 
-            //message += our_labels[table_index];  // Используем table_index вместо state
+            //message += our_labels[table_index]; 
 
             auto [symbol, old_state] = safe_d(state);
             message += symbol;
