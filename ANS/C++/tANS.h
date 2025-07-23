@@ -271,9 +271,8 @@ public:
     struct EncodeResult
     {
         size_t state;
-        uint64_t bitstream;
-
-        EncodeResult(const size_t s, const uint64_t b) : state(s), bitstream(b) {}
+        std::string bitstream;  // вместо uint64_t
+        EncodeResult(const size_t s, std::string b) : state(s), bitstream(std::move(b)) {}
     };
 
     EncodeResult encode(const std::string& message, const size_t initial_state = 0) const
@@ -282,6 +281,8 @@ public:
         {
             throw std::invalid_argument("Message cannot be empty");
         }
+
+        std::cout << message.size() << std::endl;
 
         const char last_symbol = message.back();
         const auto symbol_it = symbol_table.find(last_symbol);
@@ -296,7 +297,8 @@ public:
             throw std::invalid_argument("Initial state out of bounds for symbol");
         }
 
-        uint64_t bitstream = 1;
+        //uint64_t bitstream = 1;
+        std::string bitstream;
         size_t state = symbol_it->second[initial_state];
 
         //std::cout << "Initial state: " << state << std::endl;
@@ -335,11 +337,11 @@ public:
 
             if (n_bits > 0)
             {
-                if (bitstream > (UINT64_MAX >> n_bits))
+                for (int b = n_bits - 1; b >= 0; --b)
                 {
-                    throw std::overflow_error("Bitstream overflow during encoding");
+                    const char bit = ((state >> b) & 1) ? '1' : '0';
+                    bitstream += bit;
                 }
-                bitstream = (bitstream << n_bits) | (state & mask);
             }
 
             size_t shifted_state = state >> n_bits;
@@ -372,7 +374,7 @@ public:
             : message(std::move(msg)), final_state(state) {}
     };
 
-    DecodeResult decode(size_t state, uint64_t bitstream) const
+    DecodeResult decode(size_t state, std::string bitstream) const
     {
         std::string message;
         message.reserve(64);
@@ -416,7 +418,7 @@ public:
                 throw std::out_of_range("State index out of bounds during decoding");
             }
 
-            //message += our_labels[table_index]; 
+            //message += our_labels[table_index];
 
             auto [symbol, old_state] = safe_d(state);
             message += symbol;
@@ -427,15 +429,36 @@ public:
             const int num_bits = decode_entry.num_bits;
             const uint32_t mask = decode_entry.mask;
 
-            if (num_bits > 0 && bitstream <= 1)
-            {
-                break;
-            }
+            // if (num_bits > 0 && bitstream <= 1)
+            // {
+            //     break;
+            // }
 
             if (num_bits > 0)
             {
-                state |= bitstream & mask;
-                bitstream >>= num_bits;
+                if (bitstream.size() < static_cast<size_t>(num_bits))
+                {
+                    throw std::runtime_error("Bitstream underflow during decoding");
+                }
+
+                uint32_t bits = 0;
+
+                for (int i = 0; i < num_bits; ++i)
+                {
+                    char bit_char = bitstream.back();  // читаем с конца
+                    bitstream.pop_back();
+
+                    if (bit_char == '1')
+                    {
+                        bits |= (1U << i);  // младший бит — справа
+                    }
+                    else if (bit_char != '0')
+                    {
+                        throw std::runtime_error("Invalid character in bitstream");
+                    }
+                }
+
+                state |= bits;
             }
         }
 
