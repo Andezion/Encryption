@@ -1,6 +1,22 @@
 #include <iostream>
 #include <chrono>
+#include <fstream>
+#include <sstream>
+#include <filesystem>
+
 #include "tANS.h"
+
+std::string read_text_file(const std::string& filepath) {
+    std::ifstream file(filepath);
+    if (!file) {
+        std::cerr << "Error: Cannot open file: " << filepath << std::endl;
+        return {};
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    return buffer.str();
+}
+
 
 void test1()
 {
@@ -125,9 +141,14 @@ void test4()
 }
 void test5()
 {
-    const t_ans tans("qwedsfdqwdasqwertyuiioopasdfghjkklzxcvbnm");
+    std::string full_byte_alphabet(256, '\0');
+    for (int i = 0; i < 256; ++i) full_byte_alphabet[i] = static_cast<char>(i);
 
-    const std::string original_message = "qwerty";
+
+    const t_ans tans(full_byte_alphabet);
+
+    const std::string original_message = read_text_file("example.txt");
+    //std::cout << "File content: [" << original_message << "]" << std::endl;
     //std::cout << "Sentence before: " << original_message << std::endl;
 
     const auto start = std::chrono::high_resolution_clock::now();;
@@ -156,6 +177,7 @@ void test5()
 
 int main()
 {
+    std::cout << "Current path: " << std::filesystem::current_path() << std::endl;
     try
     {
         test1();
