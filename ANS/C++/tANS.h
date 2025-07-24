@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
+#include <iostream>
 
 class t_ans
 {
@@ -94,7 +95,6 @@ class t_ans
     std::pair<char, size_t> safe_d(const size_t state) const
     {
         const size_t index_within_block = state % block_size;
-        // const size_t index_within_block = state & block_mask;
         if (index_within_block >= our_labels.length())
         {
             throw std::out_of_range("index_within_block is too big!");
@@ -127,7 +127,6 @@ class t_ans
     void table_generator()
     {
         normalization_table.clear();
-
         encoding_table.clear();
         decoding_table.clear();
 
@@ -177,7 +176,7 @@ class t_ans
             }
 
             const uint32_t mask = n_bits_chopped < 32 ? ((1U << n_bits_chopped) - 1) : 0xFFFFFFFF;
-            normalization_table[symbol_char] =  NormalizedEntry(n_bits_chopped, min_state, mask);
+            normalization_table[symbol_char] = NormalizedEntry(n_bits_chopped, min_state, mask);
         }
 
         for (const auto &[fst, snd] : symbol_table)
@@ -222,6 +221,7 @@ class t_ans
             decoding_table[table_index] = DecodedEntry(old_state << n_bits, n_bits, mask);
         }
     }
+
 public:
     explicit t_ans(const std::string& labeling_str)
     {
@@ -230,16 +230,14 @@ public:
             throw std::invalid_argument("Labeling cannot be empty");
         }
 
-        if (labeling_str.length() > 65536)
+        if (labeling_str.length() > 1048576) // 1MB вместо 64KB!!!
         {
             throw std::invalid_argument("Labeling too large");
         }
 
         our_labels = labeling_str;
         block_size = our_labels.length();
-
         block_mask = block_size - 1;
-
 
         count_per_block.clear();
         count_before_index.clear();
@@ -255,6 +253,7 @@ public:
             {
                 count_per_block[c] = 0;
                 symbol_table[c] = std::vector<size_t>();
+                symbol_table[c].reserve(our_labels.length());
             }
 
             count_before_index.push_back(count_per_block[c]);
@@ -271,7 +270,7 @@ public:
     struct EncodeResult
     {
         size_t state;
-        std::string bitstream;  // вместо uint64_t
+        std::string bitstream;
         EncodeResult(const size_t s, std::string b) : state(s), bitstream(std::move(b)) {}
     };
 
@@ -282,7 +281,7 @@ public:
             throw std::invalid_argument("Message cannot be empty");
         }
 
-        std::cout << message.size() << std::endl;
+        std::cout << "Encoding message of size: " << message.size() << std::endl;
 
         const char last_symbol = message.back();
         const auto symbol_it = symbol_table.find(last_symbol);
@@ -297,11 +296,11 @@ public:
             throw std::invalid_argument("Initial state out of bounds for symbol");
         }
 
-        //uint64_t bitstream = 1;
         std::string bitstream;
-        size_t state = symbol_it->second[initial_state];
+        
+        bitstream.reserve(message.size() * 8);
 
-        //std::cout << "Initial state: " << state << std::endl;
+        size_t state = symbol_it->second[initial_state];
 
         if (state >= decoding_table.size())
         {
@@ -319,17 +318,17 @@ public:
         {
             char symbol = message[i];
 
-            auto renorm_it = normalization_table.find(symbol);
-            if (renorm_it == normalization_table.end())
+            auto norm_value = normalization_table.find(symbol);
+            if (norm_value == normalization_table.end())
             {
                 throw std::invalid_argument("Symbol not found in renormalization table");
             }
 
-            const auto& renorm = renorm_it->second;
-            int n_bits = renorm.n_bits_chopped;
-            uint32_t mask = renorm.mask;
+            const auto& norm = norm_value->second;
+            int n_bits = norm.n_bits_chopped;
+            uint32_t mask = norm.mask;
 
-            if (renorm.min_state > 0 && state >= renorm.min_state)
+            if (norm.min_state > 0 && state >= norm.min_state)
             {
                 n_bits++;
                 mask = (mask << 1) | 1;
@@ -359,7 +358,6 @@ public:
             }
 
             state = state_it->second;
-            //::cout << "New state after encoding: " << state << std::endl;
         }
 
         return {state, bitstream};
@@ -377,10 +375,13 @@ public:
     DecodeResult decode(size_t state, std::string bitstream) const
     {
         std::string message;
-        message.reserve(64);
+        
+        message.reserve(std::max(size_t(1024), bitstream.size()));
 
-        constexpr size_t MAX_ITERATIONS = 10000;
+        const size_t MAX_ITERATIONS = std::max(size_t(100000), bitstream.size() * 10);
         size_t iterations = 0;
+
+        size_t bitstream_pos = bitstream.size();
 
         while (iterations < MAX_ITERATIONS)
         {
@@ -391,21 +392,6 @@ public:
                 throw std::runtime_error("State underflow during decoding");
             }
 
-            // state -= block_size;
-            //
-            // if (state >= our_labels.length())
-            // {
-            //     throw std::out_of_range("State index out of bounds during decoding");
-            // }
-            //
-            // message += our_labels[state];
-            //
-            // if (state >= decoding_table.size())
-            // {
-            //     throw std::out_of_range("Decoding table index out of bounds");
-            // }
-            //
-            // const auto& decode_entry = decoding_table[state];
             size_t table_index = state - block_size;
 
             if (table_index >= decoding_table.size())
@@ -418,8 +404,6 @@ public:
                 throw std::out_of_range("State index out of bounds during decoding");
             }
 
-            //message += our_labels[table_index];
-
             auto [symbol, old_state] = safe_d(state);
             message += symbol;
 
@@ -427,30 +411,24 @@ public:
             state = decode_entry.old_state_shifted;
 
             const int num_bits = decode_entry.num_bits;
-            const uint32_t mask = decode_entry.mask;
-
-            // if (num_bits > 0 && bitstream <= 1)
-            // {
-            //     break;
-            // }
 
             if (num_bits > 0)
             {
-                if (bitstream.size() < static_cast<size_t>(num_bits))
+                if (bitstream_pos < static_cast<size_t>(num_bits))
                 {
-                    throw std::runtime_error("Bitstream underflow during decoding");
+                    break;
                 }
 
                 uint32_t bits = 0;
 
                 for (int i = 0; i < num_bits; ++i)
                 {
-                    char bit_char = bitstream.back();  // читаем с конца
-                    bitstream.pop_back();
+                    bitstream_pos--;
+                    char bit_char = bitstream[bitstream_pos];
 
                     if (bit_char == '1')
                     {
-                        bits |= (1U << i);  // младший бит — справа
+                        bits |= (1U << i);
                     }
                     else if (bit_char != '0')
                     {
@@ -460,6 +438,10 @@ public:
 
                 state |= bits;
             }
+            else
+            {
+                break;
+            }
         }
 
         if (iterations >= MAX_ITERATIONS)
@@ -467,6 +449,7 @@ public:
             throw std::runtime_error("Maximum iterations reached during decoding");
         }
 
+        
         return {message, state};
     }
 
@@ -484,5 +467,30 @@ public:
         {
             return false;
         }
+    }
+
+    size_t get_block_size() const { return block_size; }
+    size_t get_symbol_count() const { return symbol_table.size(); }
+
+    void print_stats() const
+    {
+        std::cout << "Block size: " << block_size << std::endl;
+        std::cout << "Unique symbols: " << symbol_table.size() << std::endl;
+        std::cout << "Decoding table size: " << decoding_table.size() << std::endl;
+
+        std::cout << "Symbol frequencies: ";
+        for (const auto& [symbol, count] : count_per_block)
+        {
+            if (std::isprint(symbol))
+            {
+                std::cout << "'" << symbol << "':" << count << " ";
+            }
+            else
+            {
+                std::cout << "(0x" << std::hex << static_cast<int>(static_cast<unsigned char>(symbol))
+                          << std::dec << "):" << count << " ";
+            }
+        }
+        std::cout << std::endl;
     }
 };
