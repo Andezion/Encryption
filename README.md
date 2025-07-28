@@ -21,5 +21,5 @@ Experiments with encryption, information compression and algorithms
   * [C++](#cpp_rot_47)
   * [Rust](#rust_rot_47)
 * [Vigenere](#vigenere)
-  * [C++](#cpp_vigenere)
+  * [C++](#[cpp_vigenere](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h))
   * [Rust](#rust_vigenere)
