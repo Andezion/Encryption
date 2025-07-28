@@ -1,1 +1,25 @@
-TODO
+# Encryption
+Experiments with encryption, information compression and algorithms
+
+## Content
+* [ANS](#ans)
+  * [C++](#cpp_ans)
+  * [Rust](#rust_ans)
+* [Affine](#affine)
+  * [C++](#cpp_affine)
+  * [Rust](#rust_affine)
+* [Atbash](#atbash)
+  * [C++](#cpp_atbash)
+  * [Rust](#rust_atbash)
+* [Caesar](#caesar)
+  * [C++](#cpp_caesar)
+  * [Rust](#rust_caesar)
+* [ROT13](#rot_13)
+  * [C++](#cpp_rot_13)
+  * [Rust](#rust_rot_13)
+* [ROT47](#rot_47)
+  * [C++](#cpp_rot_47)
+  * [Rust](#rust_rot_47)
+* [Vigenere](#vigenere)
+  * [C++](#cpp_vigenere)
+  * [Rust](#rust_vigenere)
