@@ -9,7 +9,7 @@ Experiments with encryption, information compression and algorithms
   * [Rust](#rust_uans) - Implementation of uANS in Rust! (not finished) -> implementation + tests
 * [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Affine/C%2B%2B/Affine.h) - Implementation of Affine in C++ (finished) -> tests
-  * [Rust](#rust_affine) - Implementation of Affine in Rust (not finished) -> implementation + tests
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Implementation of Affine in Rust (not finished) -> tests
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Atbash/C%2B%2B/Atbash.h) - Implementation of Atbash in C++ (finished) -> tests 
   * [Rust](#rust_atbash) - Implementation of Atbash in Rust (not finished) -> implementation + tests
