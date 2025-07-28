@@ -130,6 +130,22 @@ class t_ans
         encoding_table.clear();
         decoding_table.clear();
 
+        if (symbol_table.size() == 1)
+        {
+            const char single_symbol = symbol_table.begin()->first;
+
+            normalization_table[single_symbol] = NormalizedEntry(0, 0, 0);
+            encoding_table[single_symbol] = std::unordered_map<size_t, size_t>();
+
+            decoding_table.resize(block_size);
+            for (size_t i = 0; i < block_size; i++)
+            {
+                encoding_table[single_symbol][i + 1] = block_size + i;
+                decoding_table[i] = DecodedEntry(i + 1, 0, 0);
+            }
+            return;
+        }
+
         for (const auto &[fst, snd] : symbol_table)
         {
             const char symbol_char = fst;
@@ -172,7 +188,7 @@ class t_ans
             }
             if (n_bits_chopped < 0)
             {
-                throw std::runtime_error("n_bits_chopped is incorrect!");
+                n_bits_chopped = 0;
             }
 
             const uint32_t mask = n_bits_chopped < 32 ? ((1U << n_bits_chopped) - 1) : 0xFFFFFFFF;
@@ -297,7 +313,6 @@ public:
         }
 
         std::string bitstream;
-        
         bitstream.reserve(message.size() * 8);
 
         size_t state = symbol_it->second[initial_state];
@@ -307,9 +322,9 @@ public:
             throw std::runtime_error("Initial state index out of bounds");
         }
 
-        if (decoding_table[state].num_bits <= 0)
+        if (state + block_size >= 2 * block_size)
         {
-            throw std::runtime_error("Code is ambiguous because initial state is too large");
+            throw std::runtime_error("Initial state index out of bounds");
         }
 
         state += block_size;
@@ -375,10 +390,9 @@ public:
     DecodeResult decode(size_t state, std::string bitstream) const
     {
         std::string message;
-        
-        message.reserve(std::max(size_t(1024), bitstream.size()));
+        message.reserve(std::max(static_cast<size_t>(1024), bitstream.size()));
 
-        const size_t MAX_ITERATIONS = std::max(size_t(100000), bitstream.size() * 10);
+        constexpr size_t MAX_ITERATIONS = 100000;
         size_t iterations = 0;
 
         size_t bitstream_pos = bitstream.size();
@@ -392,7 +406,7 @@ public:
                 throw std::runtime_error("State underflow during decoding");
             }
 
-            size_t table_index = state - block_size;
+            const size_t table_index = state - block_size;
 
             if (table_index >= decoding_table.size())
             {
@@ -410,9 +424,7 @@ public:
             const auto& decode_entry = decoding_table[table_index];
             state = decode_entry.old_state_shifted;
 
-            const int num_bits = decode_entry.num_bits;
-
-            if (num_bits > 0)
+            if (const int num_bits = decode_entry.num_bits; num_bits > 0)
             {
                 if (bitstream_pos < static_cast<size_t>(num_bits))
                 {
@@ -424,9 +436,8 @@ public:
                 for (int i = 0; i < num_bits; ++i)
                 {
                     bitstream_pos--;
-                    char bit_char = bitstream[bitstream_pos];
 
-                    if (bit_char == '1')
+                    if (const char bit_char = bitstream[bitstream_pos]; bit_char == '1')
                     {
                         bits |= (1U << i);
                     }
@@ -440,7 +451,18 @@ public:
             }
             else
             {
-                break;
+                if (bitstream_pos == 0)
+                {
+                    break;
+                }
+
+                if (symbol_table.size() == 1)
+                {
+                    if (state < block_size)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -449,7 +471,6 @@ public:
             throw std::runtime_error("Maximum iterations reached during decoding");
         }
 
-        
         return {message, state};
     }
 
