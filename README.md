@@ -34,7 +34,7 @@ In ANS, a single number stores the entire state, and each symbol is encoded by t
 - tANS (table-based ANS) - uses a pre-computed table of transitions for fast encoding and decoding.
 - uANS (uniform ANS) - uses mathematical formulae without tables, providing compactness and flexibility.
 
-I will now show you the results of my implementation of the tANS algorithm. You can read the code [here](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h), and here are the test results:
+I will now show you the results of my implementation of the tANS algorithm. If you would like to see the tests and test materials, you can do so [here](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS_tests.cpp). You can read the code [here](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h), and here are the test results:
 ```
 <--- Constructor Error Tests --->
 Test 1.1 (Constructor) Empty labeling string: PASSED (Caught expected exception: Labeling cannot be empty)
