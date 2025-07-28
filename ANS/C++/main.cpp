@@ -5,17 +5,15 @@
 #include <filesystem>
 
 #include "tANS.h"
+#include "Caesar.h"
+#include "ROT13.h"
+#include "ROT47.h"
+#include "uANS.h"
+#include "Affine.h"
+#include "Atbash.h"
+#include "Vigenere.h"
 
-std::string read_text_file(const std::string& filepath) {
-    std::ifstream file(filepath);
-    if (!file) {
-        std::cerr << "Error: Cannot open file: " << filepath << std::endl;
-        return {};
-    }
-    std::stringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
+#include "tANS_tests.h"
 
 
 void test1()
@@ -34,7 +32,6 @@ void test1()
     //// Декодирование
     const auto decode_result = tans.decode(encode_result.state, encode_result.bitstream);
     //std::cout << "Decoded sentence: " << decode_result.message << std::endl;
-
 
     const auto end = std::chrono::high_resolution_clock::now();
     const std::chrono::duration<double> elapsed_seconds = end - start;
@@ -175,21 +172,83 @@ void test5()
     }
 }
 
+void test6()
+{
+    const std::string original_message = read_text_file("example.txt");
+
+    std::cout << original_message << std::endl;
+
+    const caesar caesar(original_message, 3);
+    const std::string encoded_message = caesar.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << caesar.decode(encoded_message) << std::endl;
+}
+void test7()
+{
+    const std::string original_message = read_text_file("example.txt");
+
+    const rot13 rot13(original_message);
+    const std::string encoded_message = rot13.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << rot13::decode(encoded_message) << std::endl;
+}
+void test8()
+{
+    const std::string original_message = read_text_file("example.txt");
+
+    const rot47 rot47(original_message);
+    const std::string encoded_message = rot47.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << rot47::decode(encoded_message) << std::endl;
+}
+
+void test9()
+{
+    const std::string original_message = read_text_file("example.txt");
+    const affine a(original_message, 3, 4);
+    const std::string encoded_message = a.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << a.decode(encoded_message) << std::endl;
+}
+
+void test10()
+{
+    const std::string original_message = read_text_file("example.txt");
+    const atbash a(original_message);
+    const std::string encoded_message = a.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << a.decode(encoded_message) << std::endl;
+}
+
+void test11()
+{
+    const vigenere v("ATTACKATDAWN", "LEMONLEMONLE");
+    const std::string encoded_message = v.encode();
+
+    std::cout << encoded_message << std::endl;
+    std::cout << v.decode(encoded_message) << std::endl;
+}
+
 int main()
 {
-    std::cout << "Current path: " << std::filesystem::current_path() << std::endl;
-    try
-    {
-        test1();
-        test2();
-        test3();
-        test4();
-        test5();
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << "Error: " << e.what() << std::endl;
-    }
+    tANS_test();
+
+
+    // std::unordered_map<char, size_t> freq = {{'a', 50}, {'b', 30}, {'c', 20}};
+    // uANS coder(freq);
+    //
+    // coder.print_statistics();
+    //
+    // std::string text = "abacaba";
+    // auto encoded = coder.encode(text);
+    //
+    // std::string decoded = coder.decode(encoded);
+
 
     return 0;
 }
