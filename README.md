@@ -2,7 +2,7 @@
 Experiments with encryption, information compression and algorithms
 
 ## Content
-* [ANS](#ans)
+* [ANS](#ans) - ANS-based compression and coding algorithms.
   * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h)
   * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h)
   * [Rust](#rust_tans)
