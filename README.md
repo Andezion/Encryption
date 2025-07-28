@@ -3,8 +3,10 @@ Experiments with encryption, information compression and algorithms
 
 ## Content
 * [ANS](#ans)
-  * [C++](#cpp_ans)
-  * [Rust](#rust_ans)
+  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h)
+  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h)
+  * [Rust](#rust_tans)
+  * [Rust](#rust_uans)
 * [Affine](#affine)
   * [C++](#cpp_affine)
   * [Rust](#rust_affine)
