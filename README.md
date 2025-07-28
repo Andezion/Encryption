@@ -25,3 +25,37 @@ Experiments with encryption, information compression and algorithms
 * [Vigenere](#vigenere) - Each letter is encrypted with a Caesar cipher shifted by the corresponding key letter.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Implementation of Vigenere in C++ (finished) -> tests 
   * [Rust](#rust_vigenere) - Implementation of Vigenere in Rust (not finished) -> implementation + tests
+ 
+---
+
+## ANS
+Asymmetric Numeral Systems (ANS) is an entropy coding method that combines high compression like arithmetic coding with performance close to bitwise algorithms (e.g., Huffman).
+In ANS, a single number stores the entire state, and each symbol is encoded by transitioning from one state to another.
+- tANS (table-based ANS) - uses a pre-computed table of transitions for fast encoding and decoding.
+- uANS (uniform ANS) - uses mathematical formulae without tables, providing compactness and flexibility.
+
+---
+
+## Affine 
+
+---
+
+## Atbash
+
+---
+
+## Caesar
+
+---
+
+## ROT13
+
+---
+
+## ROT47
+
+---
+
+## Vigenere
+
+---
