@@ -3,10 +3,10 @@ Experiments with encryption, information compression and algorithms
 
 ## Content
 * [ANS](#ans) - ANS-based compression and coding algorithms.
-  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Implementation of tANS in C++!
-  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Implementation of uANS in C++!
-  * [Rust](#rust_tans) - Implementation of tANS in Rust!
-  * [Rust](#rust_uans) - Implementation of uANS in Rust!
+  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Implementation of tANS in C++ (finished + tests)
+  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Implementation of uANS in C++ (finished) -> tests 
+  * [Rust](#rust_tans) - Implementation of tANS in Rust (not finished) -> TODO
+  * [Rust](#rust_uans) - Implementation of uANS in Rust! (not finished) -> TODO
 * [Affine](#affine)
   * [C++](#cpp_affine)
   * [Rust](#rust_affine)
