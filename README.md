@@ -18,7 +18,7 @@ Experiments with encryption, information compression and algorithms
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Implementation of Caesar in Rust (not finished) -> implementation + tests
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
   * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Implementation of ROT13 in C++ (finished) -> tests 
-  * [Rust](#rust_rot_13) - Implementation of ROT13 in Rust (not finished) -> implementation + tests
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Implementation of ROT13 in Rust (not finished) -> implementation + tests
 * [ROT47](#rot_47) - ROT47 is a derivative of ROT13 which, in addition to scrambling the basic letters, treats numbers and common symbols.
   * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Implementation of ROT47 in C++ (finished) -> tests 
   * [Rust](#rust_rot_47) - Implementation of ROT47 in Rust (not finished) -> implementation + tests
