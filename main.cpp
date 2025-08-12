@@ -15,6 +15,8 @@
 #include "Substitution.h"
 #include "Playfair.h"
 #include "Hill.h"
+#include "Transposition.h"
+#include "Double_Transposition.h"
 
 #include "tANS_tests.h"
 
@@ -262,6 +264,28 @@ void test14()
     std::cout << "Decoded: " << decoded << std::endl;
 }
 
+void test15()
+{
+    const transposition t("hello bitch");
+
+    const std::string encoded = t.encode();
+    std::cout << encoded << std::endl;
+
+    const std::string decoded = t.decode(encoded);
+    std::cout << "Decoded: " << decoded << std::endl;
+}
+
+void test16()
+{
+    const double_transposition t("iscoolguyreallycool", {2, 0, 3, 1}, {2, 1, 3, 0, 4});
+
+    const std::string encoded = t.encode();
+    std::cout << encoded << std::endl;
+
+    const std::string decoded = t.decode(encoded);
+    std::cout << "Decoded: " << decoded << std::endl;
+}
+
 int main()
 {
     //tANS_test();
@@ -277,7 +301,7 @@ int main()
     //
     // std::string decoded = coder.decode(encoded);
 
-    test14();
+    test16();
 
     return 0;
 }
