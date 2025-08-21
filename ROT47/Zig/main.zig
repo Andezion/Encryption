@@ -1,13 +1,13 @@
 const std = @import("std");
 
-pub const ROT13 = struct {
+pub const ROT47 = struct {
     input: []const u8,
 
-    pub fn init(input: []const u8) ROT13 {
-        return ROT13{ .input = input };
+    pub fn init(input: []const u8) ROT47 {
+        return ROT47{ .input = input };
     }
 
-    pub fn encode(self: *const ROT13, allocator: std.mem.Allocator) ![]u8 {
+    pub fn encode(self: *const ROT47, allocator: std.mem.Allocator) ![]u8 {
         var output = std.ArrayList(u8).init(allocator);
         defer output.deinit();
 
@@ -28,7 +28,7 @@ pub const ROT13 = struct {
         return output.toOwnedSlice();
     }
 
-    pub fn decode(self: *const ROT13, encoded_version: []const u8, allocator: std.mem.Allocator) ![]u8 {
+    pub fn decode(self: *const ROT47, encoded_version: []const u8, allocator: std.mem.Allocator) ![]u8 {
         var output = std.ArrayList(u8).init(allocator);
         defer output.deinit();
 
