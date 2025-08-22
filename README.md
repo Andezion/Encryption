@@ -34,21 +34,39 @@ Experiments with encryption, information compression and algorithms
 * [Morse](#morse)
   * [C++](https://github.com/Andezion/Encryption/blob/main/Morse/C%2B%2B/Morse.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Morse/Rust/morse.rs) - Add test and simulation!
-  * [C](#c_hill) - Add implementation and tests and simulation!
-  * [Zig](#zig_hill) - Add implementation and tests and simulation!
+  * [C](#c_morse) - Add implementation and tests and simulation!
+  * [Zig](#zig_morse) - Add implementation and tests and simulation!
 * [Playfair](#playfair)
   * [C++](https://github.com/Andezion/Encryption/blob/main/Playfair/C%2B%2B/Playfair.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Playfair/Rust/playfair.rs) - Add test and simulation!
-  * [C](#c_hill) - Add implementation and tests and simulation!
-  * [Zig](#zig_hill) - Add implementation and tests and simulation!
+  * [C](#c_playfair) - Add implementation and tests and simulation!
+  * [Zig](#zig_playfair) - Add implementation and tests and simulation!
 * [Polybius](#polybius)
+  * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
+  * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
+  * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
+    
+  * [Rust Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/Rust/polybius_method1.rs) - Add test and simulation!
+  * [Rust Polybius type 2](#rust_polybius_type_2) - Add implementation and tests and simulation!
+  * [Rust Polybius type 3](#rust_polybius_type_3) - Add implementation and tests and simulation!
+    
+  * [C](#c_polybius_type_1) - Add implementation and tests and simulation!
+  * [C](#c_polybius_type_2) - Add implementation and tests and simulation!
+  * [C](#c_polybius_type_3) - Add implementation and tests and simulation!
+    
+  * [Zig](#zig_polybius_type_1) - Add implementation and tests and simulation!
+  * [Zig](#zig_polybius_type_2) - Add implementation and tests and simulation!
+  * [Zig](#zig_polybius_type_3) - Add implementation and tests and simulation!
+    
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
   * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests!
+  * [C](#c_rot_13) - Add implementation and tests and simulation!
   * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT13/Zig/rot13.zig) - Add tests!
 * [ROT47](#rot_47) - ROT47 is a derivative of ROT13 which, in addition to scrambling the basic letters, treats numbers and common symbols.
   * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Add tests! 
   * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests!
+  * [C](#c_rot_47) - Add implementation and tests and simulation!
   * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT47/Zig/main.zig) - Add tests!
 * [Scytale](#scytale)
 * [Substitution](#substitution)
