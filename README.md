@@ -45,35 +45,49 @@ Experiments with encryption, information compression and algorithms
   * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
   * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
   * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
-    
   * [Rust Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/Rust/polybius_method1.rs) - Add test and simulation!
   * [Rust Polybius type 2](#rust_polybius_type_2) - Add implementation and tests and simulation!
   * [Rust Polybius type 3](#rust_polybius_type_3) - Add implementation and tests and simulation!
-    
   * [C](#c_polybius_type_1) - Add implementation and tests and simulation!
   * [C](#c_polybius_type_2) - Add implementation and tests and simulation!
   * [C](#c_polybius_type_3) - Add implementation and tests and simulation!
-    
   * [Zig](#zig_polybius_type_1) - Add implementation and tests and simulation!
   * [Zig](#zig_polybius_type_2) - Add implementation and tests and simulation!
   * [Zig](#zig_polybius_type_3) - Add implementation and tests and simulation!
-    
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests!
+  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests and simulation!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests and simulation!
   * [C](#c_rot_13) - Add implementation and tests and simulation!
-  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT13/Zig/rot13.zig) - Add tests!
+  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT13/Zig/rot13.zig) - Add tests and simulation!
 * [ROT47](#rot_47) - ROT47 is a derivative of ROT13 which, in addition to scrambling the basic letters, treats numbers and common symbols.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Add tests! 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests!
+  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Add tests and simulation! 
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests and simulation!
   * [C](#c_rot_47) - Add implementation and tests and simulation!
   * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT47/Zig/main.zig) - Add tests!
 * [Scytale](#scytale)
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Scytale/C%2B%2B/Scytale.h) - Add tests and simulation! 
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Scytale/Rust/scytale.rs) - Add tests and simulation!
+  * [C](#c_scytale) - Add implementation and tests and simulation!
+  * [Zig](#zig_scytale) - Add implementation and tests and simulation!
 * [Substitution](#substitution)
 * [Transposition](#transposition)
+  * [C++ double transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Double_Transposition.h) - Add tests and simulation!
+  * [C++ transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Transposition.h) - Add tests and simulation!
+  * [C++ vertical transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Vertical_Transposition.h) - Add tests and simulation!
+  * [Rust double transposition](#rust_doub_tran) - Add implementation and tests and simulation!
+  * [Rust transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/Rust/transposition.rs) - Add tests and simulation!
+  * [Rust vertical transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/Rust/vertical_transposition) - Add tests and simulation!
+  * [C double transposition](#c_doub_tran) - Add implementation and tests and simulation!
+  * [C transposition](#c_tran) - Add implementation and tests and simulation!
+  * [C vertical transposition](#c_ver_tran) - Add implementation and tests and simulation!
+  * [Zig double transposition](#zig_doub_tran) - Add implementation and tests and simulation!
+  * [Zig transposition](#zig_tran) - Add implementation and tests and simulation!
+  * [Zig vertical transposition](#zig_ver_tran) - Add implementation and tests and simulation!
 * [Vigenere](#vigenere) - Each letter is encrypted with a Caesar cipher shifted by the corresponding key letter.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Add tests!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Vigenere/Rust/vigenere.rs) - Add tests!
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Add tests and simulation!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Vigenere/Rust/vigenere.rs) - Add tests and simulation!
+  * [C](#c_vigenere) - Add implementation and tests and simulation!
+  * [Zig](#zig_vigenere) - Add implementation and tests and simulation!
  
 ---
 
