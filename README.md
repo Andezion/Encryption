@@ -175,11 +175,39 @@ All tests finished.
 
 ---
 
+## Hill
+
+---
+
+## Morse
+
+---
+
+## Playfair
+
+---
+
+## Polybius
+
+---
+
 ## ROT13
 
 ---
 
 ## ROT47
+
+---
+
+## Scytale
+
+---
+
+## Substitution
+
+---
+
+## Transposition
 
 ---
 
