@@ -26,22 +26,22 @@ Experiments with encryption, information compression and algorithms
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Add implementation and tests and simulation!
   * [C](#c_caesar) - Add implementation and tests and simulation!
   * [Zig](#zig_caesar) - Add implementation and tests and simulation!
-* [Hill](#hill)
+* [Hill](#hill) - in classical cryptography, the Hill cipher is a polygraphic substitution cipher based on linear algebra.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Hill/C%2B%2B/Hill.h) - Add tests and simulation!
   * [Rust](#rust_hill) - Add implementation and tests and simulation!
   * [C](#c_hill) - Add implementation and tests and simulation!
   * [Zig](#zig_hill) - Add implementation and tests and simulation!
-* [Morse](#morse)
+* [Morse](#morse) - is a telecommunications method which encodes text characters as standardized sequences of two different signal durations.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Morse/C%2B%2B/Morse.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Morse/Rust/morse.rs) - Add test and simulation!
   * [C](#c_morse) - Add implementation and tests and simulation!
   * [Zig](#zig_morse) - Add implementation and tests and simulation!
-* [Playfair](#playfair)
+* [Playfair](#playfair) - is a manual symmetric encryption technique and was the first literal digram substitution cipher.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Playfair/C%2B%2B/Playfair.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Playfair/Rust/playfair.rs) - Add test and simulation!
   * [C](#c_playfair) - Add implementation and tests and simulation!
   * [Zig](#zig_playfair) - Add implementation and tests and simulation!
-* [Polybius](#polybius)
+* [Polybius](#polybius) - is used for fractionating plaintext characters so that they can be represented by a smaller set of symbols.
   * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
   * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
   * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
@@ -64,17 +64,17 @@ Experiments with encryption, information compression and algorithms
   * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests and simulation!
   * [C](#c_rot_47) - Add implementation and tests and simulation!
   * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT47/Zig/main.zig) - Add tests and simulation!
-* [Scytale](#scytale)
+* [Scytale](#scytale) - is a tool used to perform a transposition cipher.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Scytale/C%2B%2B/Scytale.h) - Add tests and simulation! 
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Scytale/Rust/scytale.rs) - Add tests and simulation!
   * [C](#c_scytale) - Add implementation and tests and simulation!
   * [Zig](#zig_scytale) - Add implementation and tests and simulation!
-* [Substitution](#substitution)
+* [Substitution](#substitution) - is a method of encrypting that creates the ciphertext by replacing units of the plaintext in a defined manner
   * [C++](https://github.com/Andezion/Encryption/blob/main/Substitution/C%2B%2B/Substitution.h) - Add tests and simulation! 
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Substitution/Rust/substitution.rs) - Add tests and simulation!
   * [C](#c_substitution) - Add implementation and tests and simulation!
   * [Zig](#zig_substitution) - Add implementation and tests and simulation!
-* [Transposition](#transposition)
+* [Transposition](#transposition) - is a method of encryption which scrambles the positions of characters without changing the characters themselves.
   * [C++ double transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Double_Transposition.h) - Add tests and simulation!
   * [C++ transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Transposition.h) - Add tests and simulation!
   * [C++ vertical transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Vertical_Transposition.h) - Add tests and simulation!
