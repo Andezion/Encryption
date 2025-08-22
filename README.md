@@ -3,28 +3,31 @@ Experiments with encryption, information compression and algorithms
 
 ## Content
 * [ANS](#ans) - ANS-based compression and coding algorithms.
-  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Implementation of tANS in C++ (finished + tests)
-  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Implementation of uANS in C++ (finished) -> tests 
-  * [Rust](#rust_tans) - Implementation of tANS in Rust (not finished) -> implementation + tests
-  * [Rust](#rust_uans) - Implementation of uANS in Rust! (not finished) -> implementation + tests
+  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Add simulation!
+  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Add test!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ANS/Rust/tANS.rs) - Add tests!
+  * [Rust](#rust_uans) - Add implementation and tests!
+  * [C tANS](https://github.com/Andezion/Encryption/blob/main/ANS/%D0%A1/tans_embedded.c) - Add tests!
 * [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Affine/C%2B%2B/Affine.h) - Implementation of Affine in C++ (finished) -> tests
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Implementation of Affine in Rust (not finished) -> tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Affine/C%2B%2B/Affine.h) - Add tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Add tests!
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Atbash/C%2B%2B/Atbash.h) - Implementation of Atbash in C++ (finished) -> tests 
-  * [Rust](#rust_atbash) - Implementation of Atbash in Rust (not finished) -> implementation + tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Atbash/C%2B%2B/Atbash.h) - Add tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Atbash/Rust/atbash.rs) - Add tests!
 * [Caesar](#caesar) - is one of the simplest and most widely known encryption techniques.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Caesar/C%2B%2B/Caesar.h) - Implementation of Caesar in C++ (finished) -> tests 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Implementation of Caesar in Rust (not finished) -> implementation + tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Caesar/C%2B%2B/Caesar.h) - Add tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Add implementation and tests!
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Implementation of ROT13 in C++ (finished) -> tests 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Implementation of ROT13 in Rust (not finished) -> implementation + tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests!
+  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT13/Zig/rot13.zig) - Add tests!
 * [ROT47](#rot_47) - ROT47 is a derivative of ROT13 which, in addition to scrambling the basic letters, treats numbers and common symbols.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Implementation of ROT47 in C++ (finished) -> tests 
-  * [Rust](#rust_rot_47) - Implementation of ROT47 in Rust (not finished) -> implementation + tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Add tests! 
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests!
+  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT47/Zig/main.zig) - Add tests!
 * [Vigenere](#vigenere) - Each letter is encrypted with a Caesar cipher shifted by the corresponding key letter.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Implementation of Vigenere in C++ (finished) -> tests 
-  * [Rust](#rust_vigenere) - Implementation of Vigenere in Rust (not finished) -> implementation + tests
+  * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Add tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Vigenere/Rust/vigenere.rs) - Add tests!
  
 ---
 
