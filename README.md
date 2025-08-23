@@ -5,7 +5,7 @@ Experiments with encryption, information compression and algorithms
 * [ANS](#ans) - ANS-based compression and coding algorithms.
   * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Add simulation!
   * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Add simulation and test!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ANS/Rust/tANS.rs) - Add simulation and tests!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/ANS/Rust/tANS.rs) - Add simulation!
   * [Rust](#rust_uans) - Add implementation and tests and simulation!
   * [C tANS](https://github.com/Andezion/Encryption/blob/main/ANS/%D0%A1/tans_embedded.c) - Add tests!
   * [C uANS](#c_uans) - Add implementation and tests and simulation!
@@ -13,7 +13,7 @@ Experiments with encryption, information compression and algorithms
   * [Zig uANS](#zig_uans) - Add implementation and tests and simulation!
 * [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Affine/C%2B%2B/Affine.h) - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Add tests and simulation!
+  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Add simulation!
   * [C](#c_affine) - Add implementation and tests and simulation!
   * [Zig](zig_affine) - Add implementation and tests and simulation!
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
