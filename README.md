@@ -45,7 +45,7 @@ Experiments with encryption, information compression and algorithms
   * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
   * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
   * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
-  * [C++ Polybius type 4](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method4.h) - Add test and simulation!
+  * [C++ Polybius type 4](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybuis_method4.h) - Add test and simulation!
   * [Rust Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/Rust/polybius_method1.rs) - Add test and simulation!
   * [Rust Polybius type 2](#rust_polybius_type_2) - Add implementation and tests and simulation!
   * [Rust Polybius type 3](#rust_polybius_type_3) - Add implementation and tests and simulation!
