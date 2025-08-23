@@ -45,15 +45,19 @@ Experiments with encryption, information compression and algorithms
   * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
   * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
   * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
+  * [C++ Polybius type 4](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method4.h) - Add test and simulation!
   * [Rust Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/Rust/polybius_method1.rs) - Add test and simulation!
   * [Rust Polybius type 2](#rust_polybius_type_2) - Add implementation and tests and simulation!
   * [Rust Polybius type 3](#rust_polybius_type_3) - Add implementation and tests and simulation!
+  * [Rust Polybius type 4](#rust_polybius_type_4) - Add implementation and tests and simulation!
   * [C Polybius type 1](#c_polybius_type_1) - Add implementation and tests and simulation!
   * [C Polybius type 2](#c_polybius_type_2) - Add implementation and tests and simulation!
   * [C Polybius type 3](#c_polybius_type_3) - Add implementation and tests and simulation!
+  * [C Polybius type 4](#c_polybius_type_4) - Add implementation and tests and simulation!
   * [Zig Polybius type 1](#zig_polybius_type_1) - Add implementation and tests and simulation!
   * [Zig Polybius type 2](#zig_polybius_type_2) - Add implementation and tests and simulation!
   * [Zig Polybius type 3](#zig_polybius_type_3) - Add implementation and tests and simulation!
+  * [Zig Polybius type 4](#zig_polybius_type_4) - Add implementation and tests and simulation!
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
   * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests and simulation!
