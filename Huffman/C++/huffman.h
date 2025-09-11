@@ -8,16 +8,19 @@
 #include <unordered_map>
 #include <bitset>
 #include <iostream>
+#include <cstdint>
 
-class Huffman {
-    struct Node {
-        char id;
-        int freq;
-        std::string code;
+class Huffman
+{
+    struct Node
+    {
+        unsigned char id;
+        uint64_t freq;
         std::unique_ptr<Node> left;
         std::unique_ptr<Node> right;
 
-        explicit Node(const char ch = '\0', const int f = 0) : id(ch), freq(f), left(nullptr), right(nullptr) {}
+        explicit Node(const unsigned char ch = 0, const uint64_t f = 0)
+            : id(ch), freq(f), left(nullptr), right(nullptr) {}
     };
 
     struct Compare
@@ -32,29 +35,51 @@ class Huffman {
     std::string outputFileName;
 
     std::unique_ptr<Node> root;
-    std::unordered_map<char, std::string> codes;
-    int freqTable[128] = {};
+    std::unordered_map<unsigned char, std::string> codes;
+    uint64_t freqTable[256] = {};
 
     void countFrequencies()
     {
         std::ifstream in(inputFileName, std::ios::binary);
-        char ch;
-        while (in.get(ch))
+        if (!in)
         {
-            freqTable[static_cast<unsigned char>(ch)]++;
+            throw std::runtime_error("Ошибка: не удалось открыть файл " + inputFileName);
+        }
+
+        unsigned char ch;
+        while (in.read(reinterpret_cast<char*>(&ch), 1))
+        {
+            freqTable[ch]++;
         }
     }
 
-    void buildTree()
+    std::unique_ptr<Node> buildTree()
     {
-        std::priority_queue<std::unique_ptr<Node>, std::vector<std::unique_ptr<Node>>, Compare> pq;
+        std::priority_queue<
+            std::unique_ptr<Node>,
+            std::vector<std::unique_ptr<Node>>,
+            Compare
+        > pq;
 
-        for (int i = 0; i < 128; ++i)
+        for (int i = 0; i < 256; ++i)
         {
             if (freqTable[i] > 0)
             {
-                pq.push(std::make_unique<Node>(static_cast<char>(i), freqTable[i]));
+                pq.push(std::make_unique<Node>((unsigned char)i, freqTable[i]));
             }
+        }
+
+        if (pq.empty())
+        {
+            return nullptr;
+        }
+
+        if (pq.size() == 1)
+        {
+            auto single = std::move(pq.top()); pq.pop();
+            auto parent = std::make_unique<Node>(0, single->freq);
+            parent->left = std::move(single);
+            pq.push(std::move(parent));
         }
 
         while (pq.size() > 1)
@@ -62,34 +87,29 @@ class Huffman {
             auto left = std::move(const_cast<std::unique_ptr<Node>&>(pq.top())); pq.pop();
             auto right = std::move(const_cast<std::unique_ptr<Node>&>(pq.top())); pq.pop();
 
-            auto parent = std::make_unique<Node>('\0', left->freq + right->freq);
+            auto parent = std::make_unique<Node>(0, left->freq + right->freq);
             parent->left = std::move(left);
             parent->right = std::move(right);
+
             pq.push(std::move(parent));
         }
 
-        if (!pq.empty())
-        {
-            root = std::move(const_cast<std::unique_ptr<Node>&>(pq.top())); pq.pop();
-        }
+        return std::move(const_cast<std::unique_ptr<Node>&>(pq.top()));
     }
 
     void generateCodes(const Node* node, const std::string& currentCode)
     {
-        if (!node)
-        {
-            return;
-        }
+        if (!node) return;
+
         if (!node->left && !node->right)
         {
-            codes[node->id] = currentCode;
+            codes[node->id] = currentCode.empty() ? "0" : currentCode; 
         }
         generateCodes(node->left.get(), currentCode + "0");
         generateCodes(node->right.get(), currentCode + "1");
     }
 
-    static std::string decimalToBinary(const int value)
-    {
+    static std::string decimalToBinary(const int value) {
         return std::bitset<8>(value).to_string();
     }
 
@@ -105,20 +125,36 @@ public:
     void encode()
     {
         countFrequencies();
-        buildTree();
+        root = buildTree();
+        if (!root)
+        {
+            std::cerr << "Файл пустой, нечего кодировать\n";
+            return;
+        }
+
         generateCodes(root.get(), "");
 
         std::ifstream in(inputFileName, std::ios::binary);
-        std::ofstream out(outputFileName, std::ios::binary);
-
-        for (int i = 0; i < 128; ++i)
+        if (!in)
         {
-            out.write(reinterpret_cast<const char*>(&freqTable[i]), sizeof(int));
+            throw std::runtime_error("Ошибка: не удалось открыть файл " + inputFileName);
+        }
+        std::ofstream out(outputFileName, std::ios::binary);
+        if (!out)
+        {
+            throw std::runtime_error("Ошибка: не удалось создать файл " + outputFileName);
         }
 
+        out.write(reinterpret_cast<const char*>(freqTable), sizeof(freqTable));
+
+        in.seekg(0, std::ios::end);
+        uint64_t originalSize = in.tellg();
+        in.seekg(0, std::ios::beg);
+        out.write(reinterpret_cast<const char*>(&originalSize), sizeof(originalSize));
+
         std::string bitBuffer;
-        char ch;
-        while (in.get(ch))
+        unsigned char ch;
+        while (in.read(reinterpret_cast<char*>(&ch), 1))
         {
             bitBuffer += codes[ch];
             while (bitBuffer.size() >= 8)
@@ -136,47 +172,56 @@ public:
             unsigned char byte = static_cast<unsigned char>(binaryToDecimal(bitBuffer));
             out.put(byte);
         }
-
-        in.close();
-        out.close();
     }
 
     void decode()
     {
         std::ifstream in(inputFileName, std::ios::binary);
-        std::ofstream out(outputFileName, std::ios::binary);
-
-        for (int i = 0; i < 128; ++i)
+        if (!in)
         {
-            in.read(reinterpret_cast<char*>(&freqTable[i]), sizeof(int));
+            throw std::runtime_error("Ошибка: не удалось открыть файл " + inputFileName);
+        }
+        std::ofstream out(outputFileName, std::ios::binary);
+        if (!out)
+        {
+            throw std::runtime_error("Ошибка: не удалось создать файл " + outputFileName);
         }
 
-        buildTree();
+        in.read(reinterpret_cast<char*>(freqTable), sizeof(freqTable));
 
-        std::string bitStream;
-        char byte;
-        while (in.get(byte))
+        uint64_t originalSize = 0;
+        in.read(reinterpret_cast<char*>(&originalSize), sizeof(originalSize));
+
+        root = buildTree();
+        if (!root)
         {
-            bitStream += decimalToBinary(static_cast<unsigned char>(byte));
+            std::cerr << "Файл пустой, нечего декодировать\n";
+            return;
         }
 
         Node* current = root.get();
-        for (char bit : bitStream)
-        {
-            if (!current)
-            {
-                break;
-            }
-            current = bit == '0' ? current->left.get() : current->right.get();
+        uint64_t decodedCount = 0;
 
-            if (current && !current->left && !current->right)
+        char byte;
+        while (in.get(byte))
+        {
+            std::string bits = decimalToBinary(static_cast<unsigned char>(byte));
+            for (char bit : bits)
             {
-                out.put(current->id);
-                current = root.get();
+                current = bit == '0' ? current->left.get() : current->right.get();
+
+                if (current && !current->left && !current->right)
+                {
+                    out.put(static_cast<char>(current->id));
+                    decodedCount++;
+                    current = root.get();
+
+                    if (decodedCount >= originalSize)
+                    {
+                        return; 
+                    }
+                }
             }
         }
-
-        in.close();
-        out.close();
     }
 };
