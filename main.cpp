@@ -17,9 +17,29 @@
 #include "Hill.h"
 #include "Transposition.h"
 #include "Double_Transposition.h"
-
+#include "SHA512.h"
 #include "tANS_tests.h"
 
+void test_sha512() {
+    char cstring[] = "Foo baz, testing.";
+    std::string str = cstring;
+
+    /* SHA512 from std::string */
+    printf("sha512sum: %s\n\n",  sha512( str ).c_str());
+
+    /* SHA512 from c-string */
+    printf("sha512sum: %s\n\n",  sha512( cstring, strlen(cstring) ).c_str());
+
+    /* SHA512 from filename */
+    printf("sha512file: %s\n\n", sha512file("lzma.lib").c_str());
+
+    /* SHA512 from opened file */
+    std::FILE* file = std::fopen("lzma.lib", "rb");
+    printf("sha512file: %s\n\n", sha512file(file).c_str());
+    std::fclose(file);
+
+    return EXIT_SUCCESS;
+}
 
 void test1()
 {
