@@ -218,3 +218,5 @@ All tests finished.
 ## Vigenere
 
 ---
+
+## HUFFMAN
