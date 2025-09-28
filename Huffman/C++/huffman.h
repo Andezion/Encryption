@@ -103,7 +103,7 @@ class Huffman
 
         if (!node->left && !node->right)
         {
-            codes[node->id] = currentCode.empty() ? "0" : currentCode; 
+            codes[node->id] = currentCode.empty() ? "0" : currentCode;
         }
         generateCodes(node->left.get(), currentCode + "0");
         generateCodes(node->right.get(), currentCode + "1");
@@ -208,7 +208,7 @@ public:
             std::string bits = decimalToBinary(static_cast<unsigned char>(byte));
             for (char bit : bits)
             {
-                current = bit == '0' ? current->left.get() : current->right.get();
+                if (current != nullptr) current = bit == '0' ? current->left.get() : current->right.get();
 
                 if (current && !current->left && !current->right)
                 {
@@ -218,7 +218,7 @@ public:
 
                     if (decodedCount >= originalSize)
                     {
-                        return; 
+                        return;
                     }
                 }
             }
