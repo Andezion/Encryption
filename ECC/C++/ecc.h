@@ -175,7 +175,7 @@ static uint32_t ecc_vli_num_bits(const uint64_t *v)
 
 static int ecc_vli_test_bit(const uint64_t *v, const uint32_t bit)
 {
-    if (const uint32_t max_bits = NUM_ECC_DIGITS * 64U; bit >= max_bits) return 0;
+    if (constexpr uint32_t max_bits = NUM_ECC_DIGITS * 64U; bit >= max_bits) return 0;
     const uint32_t idx = bit / 64;
     const uint32_t off = bit % 64;
     return static_cast<int>(v[idx] >> off & 1ULL);
@@ -229,9 +229,9 @@ static uint64_t ecc_vli_sub(uint64_t *result, const uint64_t *a, const uint64_t 
         const uint64_t sub = aa - bb - borrow;
 
         if (borrow) {
-            borrow = ((aa <= bb) ? 1 : 0);
+            borrow = aa <= bb ? 1 : 0;
         } else {
-            borrow = (aa < bb) ? 1 : 0;
+            borrow = aa < bb ? 1 : 0;
         }
         result[i] = sub;
     }
@@ -284,30 +284,25 @@ static ecc_uint128_t ecc_add128(ecc_uint128_t a, ecc_uint128_t b)
 #endif
 }
 
-/* Right shift 128 by 64: returns low 64, new high in high field handled by caller. */
-static inline uint64_t ecc_128_low64(ecc_uint128_t v)
+static uint64_t ecc_128_low64(ecc_uint128_t v)
 {
 #if ECC_SUPPORTS_INT128
-    return (uint64_t)v;
+    return static_cast<uint64_t>(v);
 #else
     return v.low;
 #endif
 }
-static inline uint64_t ecc_128_high64(ecc_uint128_t v)
+static uint64_t ecc_128_high64(ecc_uint128_t v)
 {
 #if ECC_SUPPORTS_INT128
-    return (uint64_t)(v >> 64);
+    return static_cast<uint64_t>(v >> 64);
 #else
     return v.high;
 #endif
 }
 
-/* ---------- VLI multiplication and square ---------- */
-
-/* Compute product = a * b (2 * NUM_ECC_DIGITS words) */
 static void ecc_vli_mul(uint64_t *product, const uint64_t *a, const uint64_t *b)
 {
-    /* initialize product */
     for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) product[i] = 0;
 
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) {
@@ -316,78 +311,58 @@ static void ecc_vli_mul(uint64_t *product, const uint64_t *a, const uint64_t *b)
         for (ecc_uint j = 0; j < NUM_ECC_DIGITS; ++j) {
             ecc_uint128_t mul = ecc_mul64_64_to_128(a[i], b[j]);
 #if ECC_SUPPORTS_INT128
-            ecc_uint128_t accum = (ecc_uint128_t)product[i + j] + (ecc_uint128_t)ecc_128_low64(mul) + (ecc_uint128_t)carry_low;
-            product[i + j] = (uint64_t)accum;
-            carry_low = (uint64_t)(accum >> 64);
-            /* accumulate high part */
+            const ecc_uint128_t accum = static_cast<ecc_uint128_t>(product[i + j]) + static_cast<ecc_uint128_t>(ecc_128_low64(mul)) + static_cast<ecc_uint128_t>(carry_low);
+            product[i + j] = static_cast<uint64_t>(accum);
+            carry_low = static_cast<uint64_t>(accum >> 64);
             carry_high += ecc_128_high64(mul);
-            /* note: carry_high may grow; will be added at next iteration */
 #else
-            /* multiply low and high parts manually */
-            /* add low */
             uint64_t prev = product[i + j];
             uint64_t low_part = mul.low;
             uint64_t sum_low = prev + low_part + carry_low;
             product[i + j] = sum_low;
-            /* compute carry from low additions */
             uint64_t c1 = (sum_low < prev) ? 1 : 0;
-            uint64_t c2 = (sum_low < low_part) ? 1 : 0; /* safe fallback */
-            carry_low = (mul.high) + c1; /* carry_low holds mul.high + possible carry */
-            /* we'll add carry_low to next product word in next loop */
+            uint64_t c2 = (sum_low < low_part) ? 1 : 0;
+            carry_low = (mul.high) + c1;
+
 #endif
         }
 #if ECC_SUPPORTS_INT128
-        /* propagate remaining carries to product[i + NUM_ECC_DIGITS] and beyond */
+
         uint64_t k = i + NUM_ECC_DIGITS;
         while (carry_low || carry_high) {
-            ecc_uint128_t accum = (ecc_uint128_t)product[k] + (ecc_uint128_t)carry_low;
-            product[k] = (uint64_t)accum;
-            carry_low = (uint64_t)(accum >> 64);
-            /* add carry_high into carry_low next loop */
+            const ecc_uint128_t accum = static_cast<ecc_uint128_t>(product[k]) + static_cast<ecc_uint128_t>(carry_low);
+            product[k] = static_cast<uint64_t>(accum);
+            carry_low = static_cast<uint64_t>(accum >> 64);
+
             if (carry_high) {
-                uint64_t add = (uint64_t)carry_high;
-                ecc_uint128_t accum2 = (ecc_uint128_t)product[k] + (ecc_uint128_t)add;
-                product[k] = (uint64_t)accum2;
-                carry_low += (uint64_t)(accum2 >> 64);
+                const uint64_t add = carry_high;
+                const ecc_uint128_t accum2 = static_cast<ecc_uint128_t>(product[k]) + static_cast<ecc_uint128_t>(add);
+                product[k] = static_cast<uint64_t>(accum2);
+                carry_low += static_cast<uint64_t>(accum2 >> 64);
                 carry_high = 0;
             }
             ++k;
         }
 #else
-        /* The portable accumulation above already updated product[i + NUM_ECC_DIGITS] partially in each inner loop.
-           To keep the portable version correct we'd need a more elaborate algorithm; for readability and reliability,
-           we prefer using the int128 path on most modern compilers. */
-        /* For safety, after the loops, do nothing else here (portable path already handled carries in inner loop). */
 #endif
     }
 }
 
-/* Square: product = a^2 */
 static void ecc_vli_square(uint64_t *product, const uint64_t *a)
 {
-    /* Use multiplication for now (could optimize) */
     ecc_vli_mul(product, a, a);
 }
 
-/* ---------- Modular reduction helpers (curve-specific) ---------- */
-/* These are curve-specific reductions derived from known formulas.
-   For correctness and reliability we retain the structure of the original implementation
-   but ensure all temporaries are properly initialized. */
+static void ecc_vli_mmod_fast(uint64_t *result, const uint64_t *product);
 
-/* Forward declaration for fast modular reduction function */
-static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product);
-
-/* Multiply then fast reduce: result = (a*b) mod curve_p */
 static void ecc_vli_mod_mult_fast(uint64_t *result, const uint64_t *a, const uint64_t *b)
 {
     uint64_t product[2 * NUM_ECC_DIGITS];
-    /* initialize product to zero */
     for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) product[i] = 0;
     ecc_vli_mul(product, a, b);
     ecc_vli_mmod_fast(result, product);
 }
 
-/* Square then fast reduce: result = (a^2) mod curve_p */
 static void ecc_vli_mod_square_fast(uint64_t *result, const uint64_t *a)
 {
     uint64_t product[2 * NUM_ECC_DIGITS];
@@ -396,19 +371,13 @@ static void ecc_vli_mod_square_fast(uint64_t *result, const uint64_t *a)
     ecc_vli_mmod_fast(result, product);
 }
 
-/* Implementations for supported curves follow.
-   We adapt the original reductions (secp128r1, secp192r1, secp256r1, secp384r1).
-   The implementations below are close to original logic, with careful initialization. */
-
 #if ECC_CURVE == secp128r1
 
 static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
 {
     uint64_t tmp[NUM_ECC_DIGITS];
-    /* copy lower NUM_ECC_DIGITS words */
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) result[i] = product[i];
 
-    /* apply the reduction steps derived from the curve polynomial */
     tmp[0] = product[2];
     tmp[1] = (product[3] & 0x1FFFFFFFFULL) | (product[2] << 33);
     ecc_vli_add(result, result, tmp);
@@ -445,7 +414,6 @@ static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
     uint64_t tmp[NUM_ECC_DIGITS];
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) result[i] = product[i];
 
-    /* Add product[3..5] into result using pattern from original */
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) tmp[i] = product[i + NUM_ECC_DIGITS];
     ecc_vli_add(result, result, tmp);
 
@@ -466,13 +434,12 @@ static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
 
 #elif ECC_CURVE == secp256r1
 
-static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
+static void ecc_vli_mmod_fast(uint64_t *result, const uint64_t *product)
 {
     uint64_t tmp[NUM_ECC_DIGITS];
-    /* t = product (lower words) */
+
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) result[i] = product[i];
 
-    /* s1 */
     tmp[0] = 0;
     tmp[1] = product[5] & 0xffffffff00000000ULL;
     tmp[2] = product[6];
@@ -480,49 +447,42 @@ static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
     ecc_vli_lshift(tmp, tmp, 1);
     ecc_vli_add(result, result, tmp);
 
-    /* s2 */
     tmp[1] = product[6] << 32;
     tmp[2] = (product[6] >> 32) | (product[7] << 32);
     tmp[3] = product[7] >> 32;
     ecc_vli_lshift(tmp, tmp, 1);
     ecc_vli_add(result, result, tmp);
 
-    /* s3 */
     tmp[0] = product[4];
     tmp[1] = product[5] & 0xffffffffULL;
     tmp[2] = 0;
     tmp[3] = product[7];
     ecc_vli_add(result, result, tmp);
 
-    /* s4 */
     tmp[0] = (product[4] >> 32) | (product[5] << 32);
     tmp[1] = (product[5] >> 32) | (product[6] & 0xffffffff00000000ULL);
     tmp[2] = product[7];
     tmp[3] = (product[6] >> 32) | (product[4] << 32);
     ecc_vli_add(result, result, tmp);
 
-    /* d1 */
     tmp[0] = (product[5] >> 32) | (product[6] << 32);
     tmp[1] = (product[6] >> 32);
     tmp[2] = 0;
     tmp[3] = (product[4] & 0xffffffffULL) | (product[5] << 32);
     ecc_vli_sub(result, result, tmp);
 
-    /* d2 */
     tmp[0] = product[6];
     tmp[1] = product[7];
     tmp[2] = 0;
     tmp[3] = (product[4] >> 32) | (product[5] & 0xffffffff00000000ULL);
     ecc_vli_sub(result, result, tmp);
 
-    /* d3 */
     tmp[0] = (product[6] >> 32) | (product[7] << 32);
     tmp[1] = (product[7] >> 32) | (product[4] << 32);
     tmp[2] = (product[4] >> 32) | (product[5] << 32);
     tmp[3] = (product[6] << 32);
     ecc_vli_sub(result, result, tmp);
 
-    /* d4 */
     tmp[0] = product[7];
     tmp[1] = product[4] & 0xffffffff00000000ULL;
     tmp[2] = product[5];
@@ -538,50 +498,36 @@ static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
 
 static void ecc_omega_mult(uint64_t *result, const uint64_t *right)
 {
-    /* Multiply by (2^128 + 2^96 - 2^32 + 1) per original algorithm */
     uint64_t tmp[NUM_ECC_DIGITS];
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) tmp[i] = right[i];
-    /* result = right initially */
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) result[i] = right[i];
 
-    /* t = right << 32 */
     ecc_vli_lshift(tmp, right, 32);
-    /* result[1+NUM] += tmp (we'll use a temporary larger array in caller) */
-    /* This helper is used only inside ecc_vli_mmod_fast below with a larger array */
+
 }
 
-/* For secp384r1 we implement a safer algorithm following the original structure */
 static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
 {
-    /* product: length 2*NUM_ECC_DIGITS (here NUM=6 -> 12 words) */
-    /* We'll implement the original iterative reduction. */
     uint64_t tmp[2 * NUM_ECC_DIGITS];
-    /* copy product to tmp so we can modify it */
+
     for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) tmp[i] = product[i];
 
     while (!ecc_vli_is_zero(tmp + NUM_ECC_DIGITS)) {
         uint64_t wtmp[2 * NUM_ECC_DIGITS];
         for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) wtmp[i] = 0;
-        /* omega_mult on high half tmp+NUM -> wtmp */
-        /* Implement multiplicative pattern: w = (2^128 + 2^96 - 2^32 + 1) * c1 */
-        /* compute wtmp properly: */
-        /* wtmp = c1 (copied into lower slots) */
+
         for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) wtmp[i] = tmp[i + NUM_ECC_DIGITS];
 
-        /* plus (c1 << 96) => shift left by 96 bits = shift by (64*1 + 32) */
         uint64_t carry = ecc_vli_lshift(wtmp + 1, tmp + NUM_ECC_DIGITS, 32);
-        /* and place carry in position ... (we already shifted into wtmp[1..]) */
-        /* plus (c1 << 128) which places c1 starting at index 2 */
+
         for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) wtmp[i + 2] += tmp[i + NUM_ECC_DIGITS];
 
-        /* minus (c1 << 32): subtract shifted version */
         uint64_t shifted[2 * NUM_ECC_DIGITS];
         for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) shifted[i] = 0;
         ecc_vli_lshift(shifted, tmp + NUM_ECC_DIGITS, 32);
-        /* wtmp = wtmp - shifted */
+
         ecc_vli_sub(wtmp, wtmp, shifted);
 
-        /* add wtmp into tmp lower half */
         uint64_t carry_add = 0;
         for (ecc_uint i = 0; i < 2 * NUM_ECC_DIGITS; ++i) {
             uint64_t prev = tmp[i];
@@ -589,41 +535,33 @@ static void ecc_vli_mmod_fast(uint64_t *result, uint64_t *product)
             carry_add = (sum < prev) ? 1 : 0;
             tmp[i] = sum;
         }
-        /* clear upper half (c1) */
+
         for (ecc_uint i = NUM_ECC_DIGITS; i < 2 * NUM_ECC_DIGITS; ++i) tmp[i] = 0;
     }
 
-    /* now tmp[0..NUM_ECC_DIGITS-1] is candidate result; reduce if >= p */
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) result[i] = tmp[i];
     while (ecc_vli_cmp(result, curve_p) >= 0) {
         ecc_vli_sub(result, result, curve_p);
     }
 }
 
-#endif /* curve-specific reductions */
+#endif
 
-/* ---------- Modular arithmetic helpers ---------- */
 
-/* result = (a + b) mod m; assume a < m, b < m */
 static void ecc_mod_add(uint64_t *result, const uint64_t *a, const uint64_t *b, const uint64_t *m)
 {
-    uint64_t carry = ecc_vli_add(result, a, b);
-    if (carry || ecc_vli_cmp(result, m) >= 0) {
+    if (const uint64_t carry = ecc_vli_add(result, a, b); carry || ecc_vli_cmp(result, m) >= 0) {
         ecc_vli_sub(result, result, m);
     }
 }
 
-/* result = (a - b) mod m; assume a < m, b < m */
 static void ecc_mod_sub(uint64_t *result, const uint64_t *a, const uint64_t *b, const uint64_t *m)
 {
-    uint64_t borrow = ecc_vli_sub(result, a, b);
-    if (borrow) {
-        /* result = result + m */
+    if (uint64_t borrow = ecc_vli_sub(result, a, b)) {
         ecc_vli_add(result, result, m);
     }
 }
 
-/* Modular inversion using binary extended GCD method (safe). result = a^-1 mod m */
 static void ecc_mod_inv(uint64_t *result, const uint64_t *input, const uint64_t *m)
 {
     if (ecc_vli_is_zero(input)) {
@@ -637,25 +575,22 @@ static void ecc_mod_inv(uint64_t *result, const uint64_t *input, const uint64_t 
     ecc_vli_clear(u); u[0] = 1;
     ecc_vli_clear(v);
 
-    while (1) {
-        int cmp = ecc_vli_cmp(a, b);
+    while (true) {
+        const int cmp = ecc_vli_cmp(a, b);
         if (cmp == 0) break;
         if ((a[0] & 1ULL) == 0) {
-            /* a even */
             ecc_vli_rshift1(a);
             if ((u[0] & 1ULL) != 0) {
                 ecc_vli_add(u, u, m);
             }
             ecc_vli_rshift1(u);
         } else if ((b[0] & 1ULL) == 0) {
-            /* b even */
             ecc_vli_rshift1(b);
             if ((v[0] & 1ULL) != 0) {
                 ecc_vli_add(v, v, m);
             }
             ecc_vli_rshift1(v);
         } else if (cmp > 0) {
-            /* a > b */
             ecc_vli_sub(a, a, b);
             ecc_vli_rshift1(a);
             if (ecc_vli_cmp(u, v) < 0) {
@@ -667,7 +602,6 @@ static void ecc_mod_inv(uint64_t *result, const uint64_t *input, const uint64_t 
             }
             ecc_vli_rshift1(u);
         } else {
-            /* b > a */
             ecc_vli_sub(b, b, a);
             ecc_vli_rshift1(b);
             if (ecc_vli_cmp(v, u) < 0) {
@@ -683,27 +617,21 @@ static void ecc_mod_inv(uint64_t *result, const uint64_t *input, const uint64_t 
 
     ecc_vli_set(result, u);
 }
-
-/* ---------- Point operations (co-Z / Montgomery ladder style) ---------- */
-
-/* Check if point is infinity (both coords zero) */
+    
 static int ecc_point_is_zero(const ecc_point_t *P)
 {
-    return ecc_vli_is_zero((const uint64_t*)P->x) && ecc_vli_is_zero((const uint64_t*)P->y);
+    return ecc_vli_is_zero(P->x) && ecc_vli_is_zero(P->y);
 }
 
-/* Apply Z: (X, Y) = (X * Z^2, Y * Z^3) */
 static void ecc_apply_z(uint64_t *X, uint64_t *Y, const uint64_t *Z)
 {
     uint64_t t[NUM_ECC_DIGITS];
-    ecc_vli_mod_square_fast(t, Z);     /* t = Z^2 mod p */
-    ecc_vli_mod_mult_fast(X, X, t);    /* X = X * t */
-    ecc_vli_mod_mult_fast(t, t, Z);    /* t = Z^3 */
-    ecc_vli_mod_mult_fast(Y, Y, t);    /* Y = Y * Z^3 */
+    ecc_vli_mod_square_fast(t, Z);     
+    ecc_vli_mod_mult_fast(X, X, t);    
+    ecc_vli_mod_mult_fast(t, t, Z);   
+    ecc_vli_mod_mult_fast(Y, Y, t);    
 }
-
-/* Point doubling (Jacobian-style in-place): (X1,Y1,Z1) -> doubled with Z preserved pattern
-   Adapted from user's code with safer handling */
+    
 static void ecc_point_double_jacobian(uint64_t *X1, uint64_t *Y1, uint64_t *Z1)
 {
     if (ecc_vli_is_zero(Z1)) {
@@ -713,23 +641,22 @@ static void ecc_point_double_jacobian(uint64_t *X1, uint64_t *Y1, uint64_t *Z1)
     uint64_t t4[NUM_ECC_DIGITS];
     uint64_t t5[NUM_ECC_DIGITS];
 
-    ecc_vli_mod_square_fast(t4, Y1);    /* t4 = y1^2 */
-    ecc_vli_mod_mult_fast(t5, X1, t4);  /* t5 = x1 * y1^2 */
-    ecc_vli_mod_square_fast(t4, t4);    /* t4 = y1^4 */
-    ecc_vli_mod_mult_fast(Y1, Y1, Z1);  /* Y1 = y1 * z1 (will become new Z) */
-    ecc_vli_mod_square_fast(Z1, Z1);    /* Z1 = z1^2 */
+    ecc_vli_mod_square_fast(t4, Y1);   
+    ecc_vli_mod_mult_fast(t5, X1, t4); 
+    ecc_vli_mod_square_fast(t4, t4);    
+    ecc_vli_mod_mult_fast(Y1, Y1, Z1); 
+    ecc_vli_mod_square_fast(Z1, Z1);   
 
-    ecc_vli_mod_add(X1, X1, Z1, curve_p); /* t1 = x1 + z1^2 */
-    ecc_vli_mod_add(Z1, Z1, Z1, curve_p); /* t3 = 2*z1^2 */
-    ecc_vli_mod_sub(Z1, X1, Z1, curve_p); /* t3 = x1 - z1^2 */
-    ecc_vli_mod_mult_fast(X1, X1, Z1);    /* t1 = x1^2 - z1^4 */
+    ecc_vli_mod_add(X1, X1, Z1, curve_p);
+    ecc_vli_mod_add(Z1, Z1, Z1, curve_p);
+    ecc_vli_mod_sub(Z1, X1, Z1, curve_p); 
+    ecc_vli_mod_mult_fast(X1, X1, Z1);    
 
-    ecc_vli_mod_add(Z1, X1, X1, curve_p); /* t3 = 2*(x1^2 - z1^4) */
-    ecc_vli_mod_add(X1, X1, Z1, curve_p); /* t1 = 3*(x1^2 - z1^4) */
-
-    /* divide by 2 (handle odd case) */
+    ecc_vli_mod_add(Z1, X1, X1, curve_p);
+    ecc_vli_mod_add(X1, X1, Z1, curve_p); 
+    
     if (ecc_vli_test_bit(X1, 0)) {
-        uint64_t c = ecc_vli_add(X1, X1, curve_p);
+        const uint64_t c = ecc_vli_add(X1, X1, curve_p);
         ecc_vli_rshift1(X1);
         X1[NUM_ECC_DIGITS - 1] |= (c << 63);
     } else {
@@ -767,20 +694,20 @@ static void ecc_XYcZ_add(uint64_t *X1, uint64_t *Y1, uint64_t *X2, uint64_t *Y2)
 {
     uint64_t t5[NUM_ECC_DIGITS];
 
-    ecc_vli_mod_sub(t5, X2, X1, curve_p);   /* t5 = x2 - x1 */
-    ecc_vli_mod_square_fast(t5, t5);        /* A = (x2 - x1)^2 */
-    ecc_vli_mod_mult_fast(X1, X1, t5);      /* B = x1*A */
-    ecc_vli_mod_mult_fast(X2, X2, t5);      /* C = x2*A */
-    ecc_vli_mod_sub(Y2, Y2, Y1, curve_p);   /* y2 - y1 */
-    ecc_vli_mod_square_fast(t5, Y2);        /* D = (y2 - y1)^2 */
+    ecc_vli_mod_sub(t5, X2, X1, curve_p);   
+    ecc_vli_mod_square_fast(t5, t5);        
+    ecc_vli_mod_mult_fast(X1, X1, t5);      
+    ecc_vli_mod_mult_fast(X2, X2, t5);     
+    ecc_vli_mod_sub(Y2, Y2, Y1, curve_p);   
+    ecc_vli_mod_square_fast(t5, Y2);        
 
-    ecc_vli_mod_sub(t5, t5, X1, curve_p);   /* D - B */
-    ecc_vli_mod_sub(t5, t5, X2, curve_p);   /* x3 = D - B - C */
-    ecc_vli_mod_sub(X2, X2, X1, curve_p);   /* C - B */
-    ecc_vli_mod_mult_fast(Y1, Y1, X2);      /* y1*(C - B) */
-    ecc_vli_mod_sub(X2, X1, t5, curve_p);   /* B - x3 */
-    ecc_vli_mod_mult_fast(Y2, Y2, X2);      /* (y2 - y1)*(B - x3) */
-    ecc_vli_mod_sub(Y2, Y2, Y1, curve_p);   /* y3 */
+    ecc_vli_mod_sub(t5, t5, X1, curve_p);   
+    ecc_vli_mod_sub(t5, t5, X2, curve_p);  
+    ecc_vli_mod_sub(X2, X2, X1, curve_p);   
+    ecc_vli_mod_mult_fast(Y1, Y1, X2);      
+    ecc_vli_mod_sub(X2, X1, t5, curve_p);  
+    ecc_vli_mod_mult_fast(Y2, Y2, X2);     
+    ecc_vli_mod_sub(Y2, Y2, Y1, curve_p);   
 
     ecc_vli_set(X2, t5);
 }
@@ -861,10 +788,10 @@ static void ecc_bytes_to_native(uint64_t native[NUM_ECC_DIGITS], const uint8_t b
 {
     for (ecc_uint i = 0; i < NUM_ECC_DIGITS; ++i) {
         const uint8_t *digit = bytes + 8 * (NUM_ECC_DIGITS - 1 - i);
-        native[i] = ((uint64_t)digit[0] << 56) | ((uint64_t)digit[1] << 48) |
-                    ((uint64_t)digit[2] << 40) | ((uint64_t)digit[3] << 32) |
-                    ((uint64_t)digit[4] << 24) | ((uint64_t)digit[5] << 16) |
-                    ((uint64_t)digit[6] << 8)  | ((uint64_t)digit[7]);
+        native[i] = static_cast<uint64_t>(digit[0]) << 56 | static_cast<uint64_t>(digit[1]) << 48 |
+                    static_cast<uint64_t>(digit[2]) << 40 | static_cast<uint64_t>(digit[3]) << 32 |
+                    static_cast<uint64_t>(digit[4]) << 24 | static_cast<uint64_t>(digit[5]) << 16 |
+                    static_cast<uint64_t>(digit[6]) << 8  | static_cast<uint64_t>(digit[7]);
     }
 }
 
@@ -1038,7 +965,7 @@ static int ecdsa_verify(const uint8_t p_public[ECC_BYTES + 1], const uint8_t p_h
     ecc_mod_inv(z, z, curve_p);
     ecc_apply_z(sum.x, sum.y, z);
 
-    ecc_point_t *points[4] = {nullptr, (ecc_point_t*)&curve_G, &pub, &sum };
+    ecc_point_t *points[4] = {nullptr, &curve_G, &pub, &sum };
     const uint32_t bits = ecc_vli_num_bits(u1) > ecc_vli_num_bits(u2) ? ecc_vli_num_bits(u1) : ecc_vli_num_bits(u2);
 
     const ecc_point_t *point = points[(!!ecc_vli_test_bit(u1, bits - 1)) | ((!!ecc_vli_test_bit(u2, bits - 1)) << 1)];
