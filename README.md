@@ -21,16 +21,19 @@ Experiments with encryption, information compression and algorithms
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Atbash/Rust/atbash.rs) - Add tests and simulation!
   * [C](#c_atbash) - Add implementation and tests and simulation!
   * [Zig](#zig_atbash) - Add implementation and tests and simulation!
+* [BWT](#bwt)
 * [Caesar](#caesar) - is one of the simplest and most widely known encryption techniques.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Caesar/C%2B%2B/Caesar.h) - Add tests and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Add implementation and tests and simulation!
   * [C](#c_caesar) - Add implementation and tests and simulation!
   * [Zig](#zig_caesar) - Add implementation and tests and simulation!
+* [ECC](#ecc)
 * [Hill](#hill) - in classical cryptography, the Hill cipher is a polygraphic substitution cipher based on linear algebra.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Hill/C%2B%2B/Hill.h) - Add tests and simulation!
   * [Rust](#rust_hill) - Add implementation and tests and simulation!
   * [C](#c_hill) - Add implementation and tests and simulation!
   * [Zig](#zig_hill) - Add implementation and tests and simulation!
+* [Huffman](#huffman)
 * [Morse](#morse) - is a telecommunications method which encodes text characters as standardized sequences of two different signal durations.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Morse/C%2B%2B/Morse.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Morse/Rust/morse.rs) - Add test and simulation!
