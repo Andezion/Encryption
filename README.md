@@ -79,6 +79,8 @@ Experiments with encryption, information compression and algorithms
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Scytale/Rust/scytale.rs) - Add tests and simulation!
   * [C](#c_scytale) - Add implementation and tests and simulation!
   * [Zig](#zig_scytale) - Add implementation and tests and simulation!
+* [SHA256](#sha_256)
+* [SHA512](#sha_512)
 * [Substitution](#substitution) - is a method of encrypting that creates the ciphertext by replacing units of the plaintext in a defined manner
   * [C++](https://github.com/Andezion/Encryption/blob/main/Substitution/C%2B%2B/Substitution.h) - Add tests and simulation! 
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Substitution/Rust/substitution.rs) - Add tests and simulation!
