@@ -34,6 +34,9 @@ Experiments with encryption, information compression and algorithms
   * [C](#c_hill) - Add implementation and tests and simulation!
   * [Zig](#zig_hill) - Add implementation and tests and simulation!
 * [Huffman](#huffman)
+* [LZ77](#lz77)
+* [LZW](#lzw)
+* [MTF](#mtf)
 * [Morse](#morse) - is a telecommunications method which encodes text characters as standardized sequences of two different signal durations.
   * [C++](https://github.com/Andezion/Encryption/blob/main/Morse/C%2B%2B/Morse.h) - Add test and simulation!
   * [Rust](https://github.com/Andezion/Encryption/blob/main/Morse/Rust/morse.rs) - Add test and simulation!
