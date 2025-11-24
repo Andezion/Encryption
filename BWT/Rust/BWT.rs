@@ -14,7 +14,6 @@ impl KeyType for u64 {
 
 pub type NodeID = usize;
 
-/// Bw-Tree is a latch-free index for modern multicore machines.
 #[derive(Default)]
 pub struct BwTree<K, V>
 where
@@ -22,9 +21,7 @@ where
     V: Clone + Debug,
 {
     root_id: usize,
-    /// Mapping table from logical node IDs to physical pointers.
     mapping_table: MappingTable<K, V>,
-    /// The next unused node ID in the `mapping_table`.
     next_unused_node_id: AtomicUsize,
 }
 
@@ -40,8 +37,6 @@ where
             next_unused_node_id: AtomicUsize::new(1),
         };
 
-        // The Bw-Tree initially consists of two nodes: an empty leaf node
-        // and an inner node that contains the empty leaf node
         let root_id = ret.get_next_node_id();
         assert_eq!(1, root_id);
         let first_leaf_id = ret.get_next_node_id();
@@ -58,7 +53,6 @@ where
     }
 
     fn get_next_node_id(&self) -> NodeID {
-        // TODO: recycle deleted node IDs
         self.next_unused_node_id.fetch_add(1, Ordering::SeqCst)
     }
 
@@ -85,10 +79,8 @@ where
     }
 }
 
-/// Mapping from logical node IDs to physical pointers.
 #[derive(Default)]
 pub struct MappingTable<K: Ord, V: Clone> {
-    /// The mapping table.
     entries: Vec<AtomicPtr<Node<K, V>>>,
 }
 
@@ -113,7 +105,6 @@ impl<K: Ord, V: Clone> MappingTable<K, V> {
         let new = Box::leak(Box::new(node));
         match entry.compare_exchange(old, new, Ordering::SeqCst, Ordering::SeqCst) {
             Ok(_old) => {
-                // TODO: deferred delete of '_old'
                 true
             }
             Err(new) => {
@@ -146,9 +137,7 @@ where
 
 #[derive(Debug)]
 struct InnerNode<K> {
-    /// The key ranges stored in the children.
     keys: Vec<K>,
-    /// Pointers to the children.
     children: Vec<NodeID>,
 }
 
@@ -206,11 +195,8 @@ enum DeltaRecord<K, V> {
 
 #[derive(Debug)]
 struct LeafNode<K, V> {
-    /// The number of keys stored in the node.
     count: usize,
-    /// The key ranges stored in the children.
     keys: Vec<K>,
-    /// The values stored in the node.
     values: Vec<V>,
 }
 
@@ -236,11 +222,6 @@ where
     }
 }
 
-// ============================================================================
-// LinkedList implementation
-// ============================================================================
-
-/// A lock-free singly-linked list.
 #[derive(Debug)]
 pub struct LinkedList<T> {
     head: AtomicPtr<LinkedListNode<T>>,
