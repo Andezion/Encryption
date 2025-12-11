@@ -50,7 +50,7 @@ public:
             std::vector{0, 1, 2, 3} : std::vector{0, 3, 2, 1};
 
 
-        for (int rotation : rotations)
+        for (const int rotation : rotations)
         {
             for (size_t i = 0; i < grid_size; ++i)
             {
