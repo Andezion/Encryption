@@ -215,7 +215,7 @@ public:
         if (key_bytes.size() != Nk * 4) {
             throw std::length_error("Invalid key length for this AES variant");
         }
-        global_tables(); 
+        global_tables();
         key_expansion(key_bytes);
     }
 
@@ -447,7 +447,7 @@ public:
         std::vector<u8> out(input.size());
         u8 stream[16];
         for (size_t i = 0; i < input.size(); i += 16) {
-            encrypt_block(iv.data(), stream); 
+            encrypt_block(iv.data(), stream);
             std::memcpy(iv.data(), stream, 16);
             size_t chunk = std::min<size_t>(16, input.size() - i);
             for (size_t j = 0; j < chunk; ++j) out[i+j] = static_cast<u8>(input[i+j] ^ stream[j]);
@@ -485,7 +485,7 @@ private:
                 temp = (static_cast<u32>(SBOX[(temp >> 16) & 0xFF]) << 24)
                      | (static_cast<u32>(SBOX[(temp >> 8) & 0xFF]) << 16)
                      | (static_cast<u32>(SBOX[(temp >> 0) & 0xFF]) << 8)
-                     | (static_cast<u32>(SBOX[(temp >> 24) & 0xFF]) << 0); 
+                     | (static_cast<u32>(SBOX[(temp >> 24) & 0xFF]) << 0);
                 temp ^= rcon(i / key_words);
             } else if (key_words > 6 && (i % key_words) == 4) {
                 temp = (static_cast<u32>(SBOX[(temp >> 24) & 0xFF]) << 24)
@@ -503,62 +503,102 @@ using AES128 = AES_Core<4, 10>;
 using AES192 = AES_Core<6, 12>;
 using AES256 = AES_Core<8, 14>;
 
-class AES {
+class AES
+{
 public:
-    enum class Variant { AES128, AES192, AES256 };
+    enum class Variant
+    {
+        AES128, AES192, AES256
+    };
 
-    AES(const std::vector<u8>& key, Variant v = Variant::AES256) {
-        switch (v) {
+    explicit AES(const std::vector<u8>& key, const Variant v = Variant::AES256)
+    {
+        switch (v)
+        {
             case Variant::AES128:
                 if (key.size() != 16) throw std::length_error("AES-128 key must be 16 bytes");
-                core128_ = std::unique_ptr<AES128>(new AES128(span<const u8>(key)));
+                core128_ = std::make_unique<AES128>(span<const u8>(key));
                 break;
             case Variant::AES192:
                 if (key.size() != 24) throw std::length_error("AES-192 key must be 24 bytes");
-                core192_ = std::unique_ptr<AES192>(new AES192(span<const u8>(key)));
+                core192_ = std::make_unique<AES192>(span<const u8>(key));
                 break;
             case Variant::AES256:
                 if (key.size() != 32) throw std::length_error("AES-256 key must be 32 bytes");
-                core256_ = std::unique_ptr<AES256>(new AES256(span<const u8>(key)));
+                core256_ = std::make_unique<AES256>(span<const u8>(key));
                 break;
         }
         variant_ = v;
     }
 
-    ~AES() noexcept {
-        
+    ~AES() noexcept
+    {
+
     }
 
     AES(const AES&) = delete;
     AES& operator=(const AES&) = delete;
 
-    std::vector<u8> encrypt_ecb(const std::vector<u8>& in) const {
-        return dispatch([&](auto& core){ return core.encrypt_ecb(in); });
+    std::vector<u8> encrypt_ecb(const std::vector<u8>& in) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.encrypt_ecb(in);
+        });
     }
-    std::vector<u8> decrypt_ecb(const std::vector<u8>& in) const {
-        return dispatch([&](auto& core){ return core.decrypt_ecb(in); });
-    }
-
-    std::vector<u8> encrypt_cbc(const std::vector<u8>& in, const std::array<u8,16>& iv) const {
-        return dispatch([&](auto& core){ return core.encrypt_cbc(in, iv); });
-    }
-    std::vector<u8> decrypt_cbc(const std::vector<u8>& in, const std::array<u8,16>& iv) const {
-        return dispatch([&](auto& core){ return core.decrypt_cbc(in, iv); });
-    }
-
-    std::vector<u8> encrypt_cfb(const std::vector<u8>& in, const std::array<u8,16>& iv) const {
-        return dispatch([&](auto& core){ return core.encrypt_cfb(in, iv); });
-    }
-    std::vector<u8> decrypt_cfb(const std::vector<u8>& in, const std::array<u8,16>& iv) const {
-        return dispatch([&](auto& core){ return core.decrypt_cfb(in, iv); });
+    std::vector<u8> decrypt_ecb(const std::vector<u8>& in) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.decrypt_ecb(in);
+        });
     }
 
-    std::vector<u8> ofb_xor(const std::vector<u8>& in, const std::array<u8,16>& iv) const {
-        return dispatch([&](auto& core){ return core.xor_stream_ofb(in, iv); });
+    std::vector<u8> encrypt_cbc(const std::vector<u8>& in, const std::array<u8,16>& iv) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.encrypt_cbc(in, iv);
+        });
+    }
+    std::vector<u8> decrypt_cbc(const std::vector<u8>& in, const std::array<u8,16>& iv) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.decrypt_cbc(in, iv);
+        });
     }
 
-    std::vector<u8> ctr_xor(const std::vector<u8>& in, const std::array<u8,16>& nonce_counter) const {
-        return dispatch([&](auto& core){ return core.xor_stream_ctr(in, nonce_counter); });
+    std::vector<u8> encrypt_cfb(const std::vector<u8>& in, const std::array<u8,16>& iv) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.encrypt_cfb(in, iv);
+        });
+    }
+
+    std::vector<u8> decrypt_cfb(const std::vector<u8>& in, const std::array<u8,16>& iv) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.decrypt_cfb(in, iv);
+        });
+    }
+
+    std::vector<u8> ofb_xor(const std::vector<u8>& in, const std::array<u8,16>& iv) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.xor_stream_ofb(in, iv);
+        });
+    }
+
+    std::vector<u8> ctr_xor(const std::vector<u8>& in, const std::array<u8,16>& nonce_counter) const
+    {
+        return dispatch([&](auto& core)
+        {
+            return core.xor_stream_ctr(in, nonce_counter);
+        });
     }
 
 private:
@@ -568,8 +608,10 @@ private:
     std::unique_ptr<AES256> core256_;
 
     template<typename Fn>
-    auto dispatch(Fn f) const -> decltype(f(*core256_)) {
-        switch (variant_) {
+    auto dispatch(Fn f) const -> decltype(f(*core256_))
+    {
+        switch (variant_)
+        {
             case Variant::AES128: return f(*core128_);
             case Variant::AES192: return f(*core192_);
             default: return f(*core256_);
