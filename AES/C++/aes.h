@@ -418,53 +418,99 @@ public:
         return out;
     }
 
-    std::vector<u8> decrypt_cfb(const std::vector<u8>& ciphertext, const std::array<u8,16>& iv) const {
-        if (ciphertext.empty()) return {};
+    std::vector<u8> decrypt_cfb(const std::vector<u8>& ciphertext, const std::array<u8, 16>& iv) const
+    {
+        if (ciphertext.empty())
+        {
+            return {};
+        }
+
         std::vector<u8> out(ciphertext.size());
         std::array<u8,16> reg = iv;
-        u8 stream[16];
-        for (size_t i = 0; i < ciphertext.size(); i += 16) {
+
+        for (size_t i = 0; i < ciphertext.size(); i += 16)
+        {
+            u8 stream[16];
             encrypt_block(reg.data(), stream);
-            size_t chunk = std::min<size_t>(16, ciphertext.size() - i);
-            for (size_t j = 0; j < chunk; ++j) {
-                out[i+j] = static_cast<u8>(ciphertext[i+j] ^ stream[j]);
+
+            const size_t chunk = std::min<size_t>(16, ciphertext.size() - i);
+            for (size_t j = 0; j < chunk; ++j)
+            {
+                out[i + j] = static_cast<u8>(ciphertext[i + j] ^ stream[j]);
             }
-            if (chunk == 16) {
+
+            if (chunk == 16)
+            {
                 std::memcpy(reg.data(), ciphertext.data() + i, 16);
-            } else {
+            }
+            else
+            {
                 std::array<u8,16> newreg{};
-                size_t rem = 16 - chunk;
-                for (size_t k = 0; k < rem; ++k) newreg[k] = reg[k+chunk];
-                for (size_t k = 0; k < chunk; ++k) newreg[rem + k] = ciphertext[i+k];
+                const size_t rem = 16 - chunk;
+
+                for (size_t k = 0; k < rem; ++k)
+                {
+                    newreg[k] = reg[k + chunk];
+                }
+                for (size_t k = 0; k < chunk; ++k)
+                {
+                    newreg[rem + k] = ciphertext[i + k];
+                }
                 reg = newreg;
             }
         }
         return out;
     }
 
-    std::vector<u8> xor_stream_ofb(const std::vector<u8>& input, std::array<u8,16> iv) const {
-        if (input.empty()) return {};
+    std::vector<u8> xor_stream_ofb(const std::vector<u8>& input, std::array<u8,16> iv) const
+    {
+        if (input.empty())
+        {
+            return {};
+        }
+
         std::vector<u8> out(input.size());
-        u8 stream[16];
-        for (size_t i = 0; i < input.size(); i += 16) {
+        for (size_t i = 0; i < input.size(); i += 16)
+        {
+            u8 stream[16];
             encrypt_block(iv.data(), stream);
+
             std::memcpy(iv.data(), stream, 16);
-            size_t chunk = std::min<size_t>(16, input.size() - i);
-            for (size_t j = 0; j < chunk; ++j) out[i+j] = static_cast<u8>(input[i+j] ^ stream[j]);
+
+            const size_t chunk = std::min<size_t>(16, input.size() - i);
+            for (size_t j = 0; j < chunk; ++j)
+            {
+                out[i + j] = static_cast<u8>(input[i + j] ^ stream[j]);
+            }
         }
         return out;
     }
 
-    std::vector<u8> xor_stream_ctr(const std::vector<u8>& input, std::array<u8,16> nonce_counter) const {
-        if (input.empty()) return {};
+    std::vector<u8> xor_stream_ctr(const std::vector<u8>& input, std::array<u8,16> nonce_counter) const
+    {
+        if (input.empty())
+        {
+            return {};
+        }
+
         std::vector<u8> out(input.size());
-        u8 stream[16];
-        for (size_t i = 0; i < input.size(); i += 16) {
+        for (size_t i = 0; i < input.size(); i += 16)
+        {
+            u8 stream[16];
+
             encrypt_block(nonce_counter.data(), stream);
-            size_t chunk = std::min<size_t>(16, input.size() - i);
-            for (size_t j = 0; j < chunk; ++j) out[i+j] = static_cast<u8>(input[i+j] ^ stream[j]);
-            for (int k = 15; k >= 0; --k) {
-                if (++nonce_counter[k] != 0) break;
+            const size_t chunk = std::min<size_t>(16, input.size() - i);
+
+            for (size_t j = 0; j < chunk; ++j)
+            {
+                out[i + j] = static_cast<u8>(input[i + j] ^ stream[j]);
+            }
+            for (int k = 15; k >= 0; --k)
+            {
+                if (++nonce_counter[k] != 0)
+                {
+                    break;
+                }
             }
         }
         return out;
@@ -473,25 +519,33 @@ public:
 private:
     std::array<u32, KEY_WORDS> round_key_{};
 
-    void key_expansion(const span<const u8> key) {
-        unsigned int key_words = Nk;
-        for (unsigned int i = 0; i < key_words; ++i) {
+    void key_expansion(const span<const u8> key)
+    {
+        const unsigned int key_words = Nk;
+        for (unsigned int i = 0; i < key_words; ++i)
+        {
             round_key_[i] = be_load32(key.data() + 4*i);
         }
+
         unsigned int i = key_words;
-        while (i < KEY_WORDS) {
+        while (i < KEY_WORDS)
+        {
             u32 temp = round_key_[i-1];
-            if (i % key_words == 0) {
-                temp = (static_cast<u32>(SBOX[(temp >> 16) & 0xFF]) << 24)
-                     | (static_cast<u32>(SBOX[(temp >> 8) & 0xFF]) << 16)
-                     | (static_cast<u32>(SBOX[(temp >> 0) & 0xFF]) << 8)
-                     | (static_cast<u32>(SBOX[(temp >> 24) & 0xFF]) << 0);
+
+            if (i % key_words == 0)
+            {
+                temp = static_cast<u32>(SBOX[temp >> 16 & 0xFF]) << 24
+                     | static_cast<u32>(SBOX[temp >> 8 & 0xFF]) << 16
+                     | static_cast<u32>(SBOX[temp >> 0 & 0xFF]) << 8
+                     | static_cast<u32>(SBOX[temp >> 24 & 0xFF]) << 0;
                 temp ^= rcon(i / key_words);
-            } else if (key_words > 6 && (i % key_words) == 4) {
-                temp = (static_cast<u32>(SBOX[(temp >> 24) & 0xFF]) << 24)
-                     | (static_cast<u32>(SBOX[(temp >> 16) & 0xFF]) << 16)
-                     | (static_cast<u32>(SBOX[(temp >> 8) & 0xFF]) << 8)
-                     | (static_cast<u32>(SBOX[(temp >> 0) & 0xFF]) << 0);
+            }
+            else if (key_words > 6 && (i % key_words) == 4)
+            {
+                temp = static_cast<u32>(SBOX[temp >> 24 & 0xFF]) << 24
+                     | static_cast<u32>(SBOX[temp >> 16 & 0xFF]) << 16
+                     | static_cast<u32>(SBOX[temp >> 8 & 0xFF]) << 8
+                     | static_cast<u32>(SBOX[temp >> 0 & 0xFF]) << 0;
             }
             round_key_[i] = round_key_[i - key_words] ^ temp;
             ++i;
@@ -618,6 +672,5 @@ private:
         }
     }
 };
-
 }
 
