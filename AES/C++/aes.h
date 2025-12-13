@@ -331,42 +331,50 @@ public:
 
         for (unsigned int round = Nr - 1; round > 0; --round)
         {
-            const u32 a0 = Td0[(t0 >> 24) & 0xFF] ^ Td1[(t3 >> 16) & 0xFF] ^ Td2[(t2 >> 8) & 0xFF] ^ Td3[(t1 >> 0) & 0xFF] ^ round_key_[rk+0];
-            const u32 a1 = Td0[(t1 >> 24) & 0xFF] ^ Td1[(t0 >> 16) & 0xFF] ^ Td2[(t3 >> 8) & 0xFF] ^ Td3[(t2 >> 0) & 0xFF] ^ round_key_[rk+1];
-            const u32 a2 = Td0[(t2 >> 24) & 0xFF] ^ Td1[(t1 >> 16) & 0xFF] ^ Td2[(t0 >> 8) & 0xFF] ^ Td3[(t3 >> 0) & 0xFF] ^ round_key_[rk+2];
-            const u32 a3 = Td0[(t3 >> 24) & 0xFF] ^ Td1[(t2 >> 16) & 0xFF] ^ Td2[(t1 >> 8) & 0xFF] ^ Td3[(t0 >> 0) & 0xFF] ^ round_key_[rk+3];
+            const u32 a0 = Td0[t0 >> 24 & 0xFF] ^ Td1[t3 >> 16 & 0xFF] ^ Td2[t2 >> 8 & 0xFF] ^ Td3[t1 >> 0 & 0xFF] ^ round_key_[rk + 0];
+            const u32 a1 = Td0[t1 >> 24 & 0xFF] ^ Td1[t0 >> 16 & 0xFF] ^ Td2[t3 >> 8 & 0xFF] ^ Td3[t2 >> 0 & 0xFF] ^ round_key_[rk + 1];
+            const u32 a2 = Td0[t2 >> 24 & 0xFF] ^ Td1[t1 >> 16 & 0xFF] ^ Td2[t0 >> 8 & 0xFF] ^ Td3[t3 >> 0 & 0xFF] ^ round_key_[rk + 2];
+            const u32 a3 = Td0[t3 >> 24 & 0xFF] ^ Td1[t2 >> 16 & 0xFF] ^ Td2[t1 >> 8 & 0xFF] ^ Td3[t0 >> 0 & 0xFF] ^ round_key_[rk + 3];
             t0 = a0; t1 = a1; t2 = a2; t3 = a3;
             rk -= 4;
         }
 
         const u32 rk0 = round_key_[0], rk1 = round_key_[1], rk2 = round_key_[2], rk3 = round_key_[3];
 
-        out[0]  = static_cast<u8>(INV_SBOX[(t0 >> 24) & 0xFF] ^ (rk0 >> 24));
-        out[1]  = static_cast<u8>(INV_SBOX[(t3 >> 16) & 0xFF] ^ (rk0 >> 16));
-        out[2]  = static_cast<u8>(INV_SBOX[(t2 >> 8)  & 0xFF] ^ (rk0 >> 8));
-        out[3]  = static_cast<u8>(INV_SBOX[(t1 >> 0)  & 0xFF] ^ (rk0 >> 0));
+        out[0]  = static_cast<u8>(INV_SBOX[t0 >> 24 & 0xFF] ^ rk0 >> 24);
+        out[1]  = static_cast<u8>(INV_SBOX[t3 >> 16 & 0xFF] ^ rk0 >> 16);
+        out[2]  = static_cast<u8>(INV_SBOX[t2 >> 8  & 0xFF] ^ rk0 >> 8);
+        out[3]  = static_cast<u8>(INV_SBOX[t1 >> 0  & 0xFF] ^ rk0 >> 0);
 
-        out[4]  = static_cast<u8>(INV_SBOX[(t1 >> 24) & 0xFF] ^ (rk1 >> 24));
-        out[5]  = static_cast<u8>(INV_SBOX[(t0 >> 16) & 0xFF] ^ (rk1 >> 16));
-        out[6]  = static_cast<u8>(INV_SBOX[(t3 >> 8)  & 0xFF] ^ (rk1 >> 8));
-        out[7]  = static_cast<u8>(INV_SBOX[(t2 >> 0)  & 0xFF] ^ (rk1 >> 0));
+        out[4]  = static_cast<u8>(INV_SBOX[t1 >> 24 & 0xFF] ^ rk1 >> 24);
+        out[5]  = static_cast<u8>(INV_SBOX[t0 >> 16 & 0xFF] ^ rk1 >> 16);
+        out[6]  = static_cast<u8>(INV_SBOX[t3 >> 8  & 0xFF] ^ rk1 >> 8);
+        out[7]  = static_cast<u8>(INV_SBOX[t2 >> 0  & 0xFF] ^ rk1 >> 0);
 
-        out[8]  = static_cast<u8>(INV_SBOX[(t2 >> 24) & 0xFF] ^ (rk2 >> 24));
-        out[9]  = static_cast<u8>(INV_SBOX[(t1 >> 16) & 0xFF] ^ (rk2 >> 16));
-        out[10] = static_cast<u8>(INV_SBOX[(t0 >> 8)  & 0xFF] ^ (rk2 >> 8));
-        out[11] = static_cast<u8>(INV_SBOX[(t3 >> 0)  & 0xFF] ^ (rk2 >> 0));
+        out[8]  = static_cast<u8>(INV_SBOX[t2 >> 24 & 0xFF] ^ rk2 >> 24);
+        out[9]  = static_cast<u8>(INV_SBOX[t1 >> 16 & 0xFF] ^ rk2 >> 16);
+        out[10] = static_cast<u8>(INV_SBOX[t0 >> 8 & 0xFF] ^ rk2 >> 8);
+        out[11] = static_cast<u8>(INV_SBOX[t3 >> 0 & 0xFF] ^ rk2 >> 0);
 
-        out[12] = static_cast<u8>(INV_SBOX[(t3 >> 24) & 0xFF] ^ (rk3 >> 24));
-        out[13] = static_cast<u8>(INV_SBOX[(t2 >> 16) & 0xFF] ^ (rk3 >> 16));
-        out[14] = static_cast<u8>(INV_SBOX[(t1 >> 8)  & 0xFF] ^ (rk3 >> 8));
-        out[15] = static_cast<u8>(INV_SBOX[(t0 >> 0)  & 0xFF] ^ (rk3 >> 0));
+        out[12] = static_cast<u8>(INV_SBOX[t3 >> 24 & 0xFF] ^ rk3 >> 24);
+        out[13] = static_cast<u8>(INV_SBOX[t2 >> 16 & 0xFF] ^ rk3 >> 16);
+        out[14] = static_cast<u8>(INV_SBOX[t1 >> 8 & 0xFF] ^ rk3 >> 8);
+        out[15] = static_cast<u8>(INV_SBOX[t0 >> 0 & 0xFF] ^ rk3 >> 0);
     }
 
-    std::vector<u8> encrypt_ecb(const std::vector<u8>& in) const {
-        if (in.size() % AES_BLOCK_SIZE != 0) throw std::length_error("ECB: plaintext must be multiple of 16 bytes");
+    std::vector<u8> encrypt_ecb(const std::vector<u8>& in) const
+    {
+        if (in.size() % AES_BLOCK_SIZE != 0)
+        {
+            throw std::length_error("ECB: plaintext must be multiple of 16 bytes");
+        }
+
         std::vector<u8> out(in.size());
-        u8 tmp_in[16], tmp_out[16];
-        for (size_t i = 0; i < in.size(); i += 16) {
+        for (size_t i = 0; i < in.size(); i += 16)
+        {
+            u8 tmp_out[16];
+            u8 tmp_in[16];
+
             std::memcpy(tmp_in, in.data() + i, 16);
             encrypt_block(tmp_in, tmp_out);
             std::memcpy(out.data() + i, tmp_out, 16);
@@ -374,11 +382,19 @@ public:
         return out;
     }
 
-    std::vector<u8> decrypt_ecb(const std::vector<u8>& in) const {
-        if (in.size() % AES_BLOCK_SIZE != 0) throw std::length_error("ECB: ciphertext must be multiple of 16 bytes");
+    std::vector<u8> decrypt_ecb(const std::vector<u8>& in) const
+    {
+        if (in.size() % AES_BLOCK_SIZE != 0)
+        {
+            throw std::length_error("ECB: ciphertext must be multiple of 16 bytes");
+        }
+
         std::vector<u8> out(in.size());
-        u8 tmp_in[16], tmp_out[16];
-        for (size_t i = 0; i < in.size(); i += 16) {
+        for (size_t i = 0; i < in.size(); i += 16)
+        {
+            u8 tmp_out[16];
+            u8 tmp_in[16];
+
             std::memcpy(tmp_in, in.data() + i, 16);
             decrypt_block(tmp_in, tmp_out);
             std::memcpy(out.data() + i, tmp_out, 16);
@@ -386,41 +402,83 @@ public:
         return out;
     }
 
-    std::vector<u8> encrypt_cbc(const std::vector<u8>& plaintext, const std::array<u8,16>& iv) const {
-        size_t psize = plaintext.size();
-        size_t padlen = AES_BLOCK_SIZE - (psize % AES_BLOCK_SIZE);
+    std::vector<u8> encrypt_cbc(const std::vector<u8>& plaintext, const std::array<u8,16>& iv) const
+    {
+        const size_t psize = plaintext.size();
+        const size_t padlen = AES_BLOCK_SIZE - psize % AES_BLOCK_SIZE;
+
         std::vector<u8> buffer;
         buffer.reserve(psize + padlen);
+
         buffer.insert(buffer.end(), plaintext.begin(), plaintext.end());
         buffer.insert(buffer.end(), padlen, static_cast<u8>(padlen));
 
         std::vector<u8> out(buffer.size());
         std::array<u8,16> state = iv;
-        u8 tmp_block[16], xored[16], enc[16];
-        for (size_t i = 0; i < buffer.size(); i += 16) {
-            for (size_t j = 0; j < 16; ++j) xored[j] = static_cast<u8>(buffer[i+j] ^ state[j]);
+
+        u8 xored[16];
+
+        for (size_t i = 0; i < buffer.size(); i += 16)
+        {
+            u8 enc[16];
+            for (size_t j = 0; j < 16; ++j)
+            {
+                xored[j] = static_cast<u8>(buffer[i+j] ^ state[j]);
+            }
+
             encrypt_block(xored, enc);
+
             std::memcpy(out.data() + i, enc, 16);
             std::memcpy(state.data(), enc, 16);
         }
         return out;
     }
 
-    std::vector<u8> decrypt_cbc(const std::vector<u8>& ciphertext, const std::array<u8,16>& iv) const {
-        if (ciphertext.size() % AES_BLOCK_SIZE != 0) throw std::length_error("CBC: ciphertext size invalid");
+    std::vector<u8> decrypt_cbc(const std::vector<u8>& ciphertext, const std::array<u8,16>& iv) const
+    {
+        if (ciphertext.size() % AES_BLOCK_SIZE != 0)
+        {
+            throw std::length_error("CBC: ciphertext size invalid");
+        }
+
         std::vector<u8> tmp(ciphertext.size());
         std::array<u8,16> prev = iv;
-        u8 dec[16], xored[16];
-        for (size_t i = 0; i < ciphertext.size(); i += 16) {
+
+        u8 xored[16];
+        for (size_t i = 0; i < ciphertext.size(); i += 16)
+        {
+            u8 dec[16];
             decrypt_block(ciphertext.data() + i, dec);
-            for (size_t j = 0; j < 16; ++j) xored[j] = static_cast<u8>(dec[j] ^ prev[j]);
+
+            for (size_t j = 0; j < 16; ++j)
+            {
+                xored[j] = static_cast<u8>(dec[j] ^ prev[j]);
+            }
+
             std::memcpy(tmp.data() + i, xored, 16);
             std::memcpy(prev.data(), ciphertext.data() + i, 16);
         }
-        if (tmp.empty()) return tmp;
-        u8 pad = tmp.back();
-        if (pad == 0 || pad > 16) throw std::runtime_error("Invalid PKCS#7 padding");
-        for (size_t i = tmp.size() - pad; i < tmp.size(); ++i) if (tmp[i] != pad) throw std::runtime_error("Invalid PKCS#7 padding");
+
+        if (tmp.empty())
+        {
+            return tmp;
+        }
+
+        const u8 pad = tmp.back();
+        if (pad == 0 || pad > 16)
+        {
+            throw std::runtime_error("Invalid PKCS#7 padding");
+        }
+
+
+        for (size_t i = tmp.size() - pad; i < tmp.size(); ++i)
+        {
+            if (tmp[i] != pad)
+            {
+                throw std::runtime_error("Invalid PKCS#7 padding");
+            }
+        }
+
         tmp.resize(tmp.size() - pad);
         return tmp;
     }
@@ -724,6 +782,5 @@ private:
         }
     }
 };
-
 }
 
