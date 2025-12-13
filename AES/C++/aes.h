@@ -224,12 +224,26 @@ public:
     AES_Core(AES_Core&&) = delete;
     AES_Core& operator=(AES_Core&&) = delete;
 
-    ~AES_Core() noexcept {
+    ~AES_Core() noexcept
+    {
         secure_zero(round_key_.data(), round_key_.size() * sizeof(round_key_[0]));
     }
 
-    inline void encrypt_block(const u8 in[AES_BLOCK_SIZE], u8 out[AES_BLOCK_SIZE]) const {
-        const Tables& T = global_tables();
+    void encrypt_block(const u8 in[AES_BLOCK_SIZE], u8 out[AES_BLOCK_SIZE]) const
+    {
+        const auto&[
+            Te0,
+            Te1,
+            Te2,
+            Te3,
+            Td0,
+            Td1,
+            Td2,
+            Td3,
+            Te4,
+            Td4,
+            ready] = global_tables();
+
         u32 s0 = be_load32(in + 0);
         u32 s1 = be_load32(in + 4);
         u32 s2 = be_load32(in + 8);
@@ -241,75 +255,92 @@ public:
         u32 t3 = s3 ^ round_key_[3];
 
         unsigned int rk = 4;
-        for (unsigned int round = 1; round < Nr; ++round) {
-            u32 a0 = T.Te0[(t0 >> 24) & 0xFF] ^ T.Te1[(t1 >> 16) & 0xFF] ^ T.Te2[(t2 >> 8) & 0xFF] ^ T.Te3[(t3 >> 0) & 0xFF] ^ round_key_[rk+0];
-            u32 a1 = T.Te0[(t1 >> 24) & 0xFF] ^ T.Te1[(t2 >> 16) & 0xFF] ^ T.Te2[(t3 >> 8) & 0xFF] ^ T.Te3[(t0 >> 0) & 0xFF] ^ round_key_[rk+1];
-            u32 a2 = T.Te0[(t2 >> 24) & 0xFF] ^ T.Te1[(t3 >> 16) & 0xFF] ^ T.Te2[(t0 >> 8) & 0xFF] ^ T.Te3[(t1 >> 0) & 0xFF] ^ round_key_[rk+2];
-            u32 a3 = T.Te0[(t3 >> 24) & 0xFF] ^ T.Te1[(t0 >> 16) & 0xFF] ^ T.Te2[(t1 >> 8) & 0xFF] ^ T.Te3[(t2 >> 0) & 0xFF] ^ round_key_[rk+3];
+        for (unsigned int round = 1; round < Nr; ++round)
+        {
+            const u32 a0 = Te0[t0 >> 24 & 0xFF] ^ Te1[t1 >> 16 & 0xFF] ^ Te2[t2 >> 8 & 0xFF] ^ Te3[t3 >> 0 & 0xFF] ^ round_key_[rk + 0];
+            const u32 a1 = Te0[t1 >> 24 & 0xFF] ^ Te1[t2 >> 16 & 0xFF] ^ Te2[t3 >> 8 & 0xFF] ^ Te3[t0 >> 0 & 0xFF] ^ round_key_[rk + 1];
+            const u32 a2 = Te0[t2 >> 24 & 0xFF] ^ Te1[t3 >> 16 & 0xFF] ^ Te2[t0 >> 8 & 0xFF] ^ Te3[t1 >> 0 & 0xFF] ^ round_key_[rk + 2];
+            const u32 a3 = Te0[t3 >> 24 & 0xFF] ^ Te1[t0 >> 16 & 0xFF] ^ Te2[t1 >> 8 & 0xFF] ^ Te3[t2 >> 0 & 0xFF] ^ round_key_[rk + 3];
+
             t0 = a0; t1 = a1; t2 = a2; t3 = a3;
             rk += 4;
         }
 
-        u8 b0 = T.Te4[(t0 >> 24) & 0xFF];
-        u8 b1 = T.Te4[(t1 >> 16) & 0xFF];
-        u8 b2 = T.Te4[(t2 >> 8) & 0xFF];
-        u8 b3 = T.Te4[(t3 >> 0) & 0xFF];
+        const u8 b0 = Te4[t0 >> 24 & 0xFF];
+        const u8 b1 = Te4[t1 >> 16 & 0xFF];
+        const u8 b2 = Te4[t2 >> 8 & 0xFF];
+        const u8 b3 = Te4[t3 >> 0 & 0xFF];
 
-        u8 c0 = T.Te4[(t1 >> 24) & 0xFF];
-        u8 c1 = T.Te4[(t2 >> 16) & 0xFF];
-        u8 c2 = T.Te4[(t3 >> 8) & 0xFF];
-        u8 c3 = T.Te4[(t0 >> 0) & 0xFF];
+        const u8 c0 = Te4[t1 >> 24 & 0xFF];
+        const u8 c1 = Te4[t2 >> 16 & 0xFF];
+        const u8 c2 = Te4[t3 >> 8 & 0xFF];
+        const u8 c3 = Te4[t0 >> 0 & 0xFF];
 
-        u32 rk0 = round_key_[rk+0];
-        u32 rk1 = round_key_[rk+1];
-        u32 rk2 = round_key_[rk+2];
-        u32 rk3 = round_key_[rk+3];
+        const u32 rk0 = round_key_[rk + 0];
+        const u32 rk1 = round_key_[rk + 1];
+        const u32 rk2 = round_key_[rk + 2];
+        const u32 rk3 = round_key_[rk + 3];
 
-        out[0]  = static_cast<u8>(b0 ^ (rk0 >> 24));
-        out[1]  = static_cast<u8>(b1 ^ (rk0 >> 16));
-        out[2]  = static_cast<u8>(b2 ^ (rk0 >> 8));
-        out[3]  = static_cast<u8>(b3 ^ (rk0 >> 0));
+        out[0]  = static_cast<u8>(b0 ^ rk0 >> 24);
+        out[1]  = static_cast<u8>(b1 ^ rk0 >> 16);
+        out[2]  = static_cast<u8>(b2 ^ rk0 >> 8);
+        out[3]  = static_cast<u8>(b3 ^ rk0 >> 0);
 
-        out[4]  = static_cast<u8>(c0 ^ (rk1 >> 24));
-        out[5]  = static_cast<u8>(c1 ^ (rk1 >> 16));
-        out[6]  = static_cast<u8>(c2 ^ (rk1 >> 8));
-        out[7]  = static_cast<u8>(c3 ^ (rk1 >> 0));
+        out[4]  = static_cast<u8>(c0 ^ rk1 >> 24);
+        out[5]  = static_cast<u8>(c1 ^ rk1 >> 16);
+        out[6]  = static_cast<u8>(c2 ^ rk1 >> 8);
+        out[7]  = static_cast<u8>(c3 ^ rk1 >> 0);
 
-        out[8]  = static_cast<u8>(T.Te4[(t2 >> 24) & 0xFF] ^ (rk2 >> 24));
-        out[9]  = static_cast<u8>(T.Te4[(t3 >> 16) & 0xFF] ^ (rk2 >> 16));
-        out[10] = static_cast<u8>(T.Te4[(t0 >> 8) & 0xFF] ^ (rk2 >> 8));
-        out[11] = static_cast<u8>(T.Te4[(t1 >> 0) & 0xFF] ^ (rk2 >> 0));
+        out[8]  = static_cast<u8>(Te4[t2 >> 24 & 0xFF] ^ rk2 >> 24);
+        out[9]  = static_cast<u8>(Te4[t3 >> 16 & 0xFF] ^ rk2 >> 16);
+        out[10] = static_cast<u8>(Te4[t0 >> 8 & 0xFF] ^ rk2 >> 8);
+        out[11] = static_cast<u8>(Te4[t1 >> 0 & 0xFF] ^ rk2 >> 0);
 
-        out[12] = static_cast<u8>(T.Te4[(t3 >> 24) & 0xFF] ^ (rk3 >> 24));
-        out[13] = static_cast<u8>(T.Te4[(t0 >> 16) & 0xFF] ^ (rk3 >> 16));
-        out[14] = static_cast<u8>(T.Te4[(t1 >> 8) & 0xFF] ^ (rk3 >> 8));
-        out[15] = static_cast<u8>(T.Te4[(t2 >> 0) & 0xFF] ^ (rk3 >> 0));
+        out[12] = static_cast<u8>(Te4[t3 >> 24 & 0xFF] ^ rk3 >> 24);
+        out[13] = static_cast<u8>(Te4[t0 >> 16 & 0xFF] ^ rk3 >> 16);
+        out[14] = static_cast<u8>(Te4[t1 >> 8 & 0xFF] ^ rk3 >> 8);
+        out[15] = static_cast<u8>(Te4[t2 >> 0 & 0xFF] ^ rk3 >> 0);
     }
 
-    inline void decrypt_block(const u8 in[AES_BLOCK_SIZE], u8 out[AES_BLOCK_SIZE]) const {
-        const Tables& T = global_tables();
+    void decrypt_block(const u8 in[AES_BLOCK_SIZE], u8 out[AES_BLOCK_SIZE]) const
+    {
+        const auto&[
+            Te0,
+            Te1,
+            Te2,
+            Te3,
+            Td0,
+            Td1,
+            Td2,
+            Td3,
+            Te4,
+            Td4,
+            ready] = global_tables();
+
         u32 s0 = be_load32(in + 0);
         u32 s1 = be_load32(in + 4);
         u32 s2 = be_load32(in + 8);
         u32 s3 = be_load32(in + 12);
 
         unsigned int rk = 4 * Nr;
-        u32 t0 = s0 ^ round_key_[rk+0];
-        u32 t1 = s1 ^ round_key_[rk+1];
-        u32 t2 = s2 ^ round_key_[rk+2];
-        u32 t3 = s3 ^ round_key_[rk+3];
+        u32 t0 = s0 ^ round_key_[rk + 0];
+        u32 t1 = s1 ^ round_key_[rk + 1];
+        u32 t2 = s2 ^ round_key_[rk + 2];
+        u32 t3 = s3 ^ round_key_[rk + 3];
         rk -= 4;
 
-        for (unsigned int round = Nr - 1; round > 0; --round) {
-            u32 a0 = T.Td0[(t0 >> 24) & 0xFF] ^ T.Td1[(t3 >> 16) & 0xFF] ^ T.Td2[(t2 >> 8) & 0xFF] ^ T.Td3[(t1 >> 0) & 0xFF] ^ round_key_[rk+0];
-            u32 a1 = T.Td0[(t1 >> 24) & 0xFF] ^ T.Td1[(t0 >> 16) & 0xFF] ^ T.Td2[(t3 >> 8) & 0xFF] ^ T.Td3[(t2 >> 0) & 0xFF] ^ round_key_[rk+1];
-            u32 a2 = T.Td0[(t2 >> 24) & 0xFF] ^ T.Td1[(t1 >> 16) & 0xFF] ^ T.Td2[(t0 >> 8) & 0xFF] ^ T.Td3[(t3 >> 0) & 0xFF] ^ round_key_[rk+2];
-            u32 a3 = T.Td0[(t3 >> 24) & 0xFF] ^ T.Td1[(t2 >> 16) & 0xFF] ^ T.Td2[(t1 >> 8) & 0xFF] ^ T.Td3[(t0 >> 0) & 0xFF] ^ round_key_[rk+3];
+        for (unsigned int round = Nr - 1; round > 0; --round)
+        {
+            const u32 a0 = Td0[(t0 >> 24) & 0xFF] ^ Td1[(t3 >> 16) & 0xFF] ^ Td2[(t2 >> 8) & 0xFF] ^ Td3[(t1 >> 0) & 0xFF] ^ round_key_[rk+0];
+            const u32 a1 = Td0[(t1 >> 24) & 0xFF] ^ Td1[(t0 >> 16) & 0xFF] ^ Td2[(t3 >> 8) & 0xFF] ^ Td3[(t2 >> 0) & 0xFF] ^ round_key_[rk+1];
+            const u32 a2 = Td0[(t2 >> 24) & 0xFF] ^ Td1[(t1 >> 16) & 0xFF] ^ Td2[(t0 >> 8) & 0xFF] ^ Td3[(t3 >> 0) & 0xFF] ^ round_key_[rk+2];
+            const u32 a3 = Td0[(t3 >> 24) & 0xFF] ^ Td1[(t2 >> 16) & 0xFF] ^ Td2[(t1 >> 8) & 0xFF] ^ Td3[(t0 >> 0) & 0xFF] ^ round_key_[rk+3];
             t0 = a0; t1 = a1; t2 = a2; t3 = a3;
             rk -= 4;
         }
 
-        u32 rk0 = round_key_[0], rk1 = round_key_[1], rk2 = round_key_[2], rk3 = round_key_[3];
+        const u32 rk0 = round_key_[0], rk1 = round_key_[1], rk2 = round_key_[2], rk3 = round_key_[3];
+
         out[0]  = static_cast<u8>(INV_SBOX[(t0 >> 24) & 0xFF] ^ (rk0 >> 24));
         out[1]  = static_cast<u8>(INV_SBOX[(t3 >> 16) & 0xFF] ^ (rk0 >> 16));
         out[2]  = static_cast<u8>(INV_SBOX[(t2 >> 8)  & 0xFF] ^ (rk0 >> 8));
@@ -394,24 +425,45 @@ public:
         return tmp;
     }
 
-    std::vector<u8> encrypt_cfb(const std::vector<u8>& plaintext, const std::array<u8,16>& iv) const {
-        if (plaintext.empty()) return {};
+    std::vector<u8> encrypt_cfb(const std::vector<u8>& plaintext, const std::array<u8,16>& iv) const
+    {
+        if (plaintext.empty())
+        {
+            return {};
+        }
+
         std::vector<u8> out(plaintext.size());
         std::array<u8,16> reg = iv;
-        u8 stream[16];
-        for (size_t i = 0; i < plaintext.size(); i += 16) {
+
+        for (size_t i = 0; i < plaintext.size(); i += 16)
+        {
+            u8 stream[16];
             encrypt_block(reg.data(), stream);
-            size_t chunk = std::min<size_t>(16, plaintext.size() - i);
-            for (size_t j = 0; j < chunk; ++j) {
-                out[i+j] = static_cast<u8>(plaintext[i+j] ^ stream[j]);
+            const size_t chunk = std::min<size_t>(16, plaintext.size() - i);
+
+            for (size_t j = 0; j < chunk; ++j)
+            {
+                out[i + j] = static_cast<u8>(plaintext[i + j] ^ stream[j]);
             }
-            if (chunk == 16) {
+
+            if (chunk == 16)
+            {
                 std::memcpy(reg.data(), out.data() + i, 16);
-            } else {
+            }
+            else
+            {
                 std::array<u8,16> newreg{};
-                size_t rem = 16 - chunk;
-                for (size_t k = 0; k < rem; ++k) newreg[k] = reg[k+chunk];
-                for (size_t k = 0; k < chunk; ++k) newreg[rem + k] = out[i+k];
+                const size_t rem = 16 - chunk;
+
+                for (size_t k = 0; k < rem; ++k)
+                {
+                    newreg[k] = reg[k + chunk];
+                }
+                for (size_t k = 0; k < chunk; ++k)
+                {
+                    newreg[rem + k] = out[i + k];
+                }
+
                 reg = newreg;
             }
         }
@@ -672,5 +724,6 @@ private:
         }
     }
 };
+
 }
 
