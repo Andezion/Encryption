@@ -3,108 +3,28 @@ Experiments with encryption, information compression and algorithms
 
 ## Content
 * [ANS](#ans) - ANS-based compression and coding algorithms.
-  * [C++ tANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/tANS.h) - Add simulation!
-  * [C++ uANS](https://github.com/Andezion/Encryption/blob/main/ANS/C%2B%2B/uANS.h) - Add simulation and test!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ANS/Rust/tANS.rs) - Add simulation!
-  * [Rust](#rust_uans) - Add implementation and tests and simulation!
-  * [C tANS](https://github.com/Andezion/Encryption/blob/main/ANS/%D0%A1/tans_embedded.c) - Add tests!
-  * [C uANS](#c_uans) - Add implementation and tests and simulation!
-  * [Zig tANS](#zig_tans) - Add implementation and tests and simulation!
-  * [Zig uANS](#zig_uans) - Add implementation and tests and simulation!
 * [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Affine/C%2B%2B/Affine.h) - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Affine/Rust/affine.rs) - Add simulation!
-  * [C](#c_affine) - Add implementation and tests and simulation!
-  * [Zig](zig_affine) - Add implementation and tests and simulation!
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Atbash/C%2B%2B/Atbash.h) - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Atbash/Rust/atbash.rs) - Add tests and simulation!
-  * [C](#c_atbash) - Add implementation and tests and simulation!
-  * [Zig](#zig_atbash) - Add implementation and tests and simulation!
 * [BWT](#bwt)
 * [Caesar](#caesar) - is one of the simplest and most widely known encryption techniques.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Caesar/C%2B%2B/Caesar.h) - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Caesar/Rust/main.rs) - Add implementation and tests and simulation!
-  * [C](#c_caesar) - Add implementation and tests and simulation!
-  * [Zig](#zig_caesar) - Add implementation and tests and simulation!
 * [ECC](#ecc)
 * [Hill](#hill) - in classical cryptography, the Hill cipher is a polygraphic substitution cipher based on linear algebra.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Hill/C%2B%2B/Hill.h) - Add tests and simulation!
-  * [Rust](#rust_hill) - Add implementation and tests and simulation!
-  * [C](#c_hill) - Add implementation and tests and simulation!
-  * [Zig](#zig_hill) - Add implementation and tests and simulation!
 * [Huffman](#huffman)
 * [LZ77](#lz77)
 * [LZW](#lzw)
 * [MTF](#mtf)
 * [Morse](#morse) - is a telecommunications method which encodes text characters as standardized sequences of two different signal durations.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Morse/C%2B%2B/Morse.h) - Add test and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Morse/Rust/morse.rs) - Add test and simulation!
-  * [C](#c_morse) - Add implementation and tests and simulation!
-  * [Zig](#zig_morse) - Add implementation and tests and simulation!
 * [Playfair](#playfair) - is a manual symmetric encryption technique and was the first literal digram substitution cipher.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Playfair/C%2B%2B/Playfair.h) - Add test and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Playfair/Rust/playfair.rs) - Add test and simulation!
-  * [C](#c_playfair) - Add implementation and tests and simulation!
-  * [Zig](#zig_playfair) - Add implementation and tests and simulation!
 * [Polybius](#polybius) - is used for fractionating plaintext characters so that they can be represented by a smaller set of symbols.
-  * [C++ Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method1.h) - Add test and simulation!
-  * [C++ Polybius type 2](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method2.h) - Add test and simulation!
-  * [C++ Polybius type 3](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybius_method3.h) - Add test and simulation!
-  * [C++ Polybius type 4](https://github.com/Andezion/Encryption/blob/main/Polybius/C%2B%2B/Polybuis_method4.h) - Add test and simulation!
-  * [Rust Polybius type 1](https://github.com/Andezion/Encryption/blob/main/Polybius/Rust/polybius_method1.rs) - Add test and simulation!
-  * [Rust Polybius type 2](#rust_polybius_type_2) - Add implementation and tests and simulation!
-  * [Rust Polybius type 3](#rust_polybius_type_3) - Add implementation and tests and simulation!
-  * [Rust Polybius type 4](#rust_polybius_type_4) - Add implementation and tests and simulation!
-  * [C Polybius type 1](#c_polybius_type_1) - Add implementation and tests and simulation!
-  * [C Polybius type 2](#c_polybius_type_2) - Add implementation and tests and simulation!
-  * [C Polybius type 3](#c_polybius_type_3) - Add implementation and tests and simulation!
-  * [C Polybius type 4](#c_polybius_type_4) - Add implementation and tests and simulation!
-  * [Zig Polybius type 1](#zig_polybius_type_1) - Add implementation and tests and simulation!
-  * [Zig Polybius type 2](#zig_polybius_type_2) - Add implementation and tests and simulation!
-  * [Zig Polybius type 3](#zig_polybius_type_3) - Add implementation and tests and simulation!
-  * [Zig Polybius type 4](#zig_polybius_type_4) - Add implementation and tests and simulation!
 * [ROT13](#rot_13) - is a simple letter substitution cipher that replaces a letter with the 13th letter after it in the Latin alphabet.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT13/C%2B%2B/ROT13.h) - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT13/Rust/rot13.rs) - Add tests and simulation!
-  * [C](#c_rot_13) - Add implementation and tests and simulation!
-  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT13/Zig/rot13.zig) - Add tests and simulation!
 * [ROT47](#rot_47) - ROT47 is a derivative of ROT13 which, in addition to scrambling the basic letters, treats numbers and common symbols.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/ROT47/C%2B%2B/ROT47.h) - Add tests and simulation! 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/ROT47/Rust/rot47.rs) - Add tests and simulation!
-  * [C](#c_rot_47) - Add implementation and tests and simulation!
-  * [Zig](https://github.com/Andezion/Encryption/blob/main/ROT47/Zig/main.zig) - Add tests and simulation!
 * [Scytale](#scytale) - is a tool used to perform a transposition cipher.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Scytale/C%2B%2B/Scytale.h) - Add tests and simulation! 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Scytale/Rust/scytale.rs) - Add tests and simulation!
-  * [C](#c_scytale) - Add implementation and tests and simulation!
-  * [Zig](#zig_scytale) - Add implementation and tests and simulation!
 * [SHA256](#sha_256)
 * [SHA512](#sha_512)
 * [Substitution](#substitution) - is a method of encrypting that creates the ciphertext by replacing units of the plaintext in a defined manner
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Substitution/C%2B%2B/Substitution.h) - Add tests and simulation! 
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Substitution/Rust/substitution.rs) - Add tests and simulation!
-  * [C](#c_substitution) - Add implementation and tests and simulation!
-  * [Zig](#zig_substitution) - Add implementation and tests and simulation!
 * [Transposition](#transposition) - is a method of encryption which scrambles the positions of characters without changing the characters themselves.
-  * [C++ double transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Double_Transposition.h) - Add tests and simulation!
-  * [C++ transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Transposition.h) - Add tests and simulation!
-  * [C++ vertical transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/C%2B%2B/Vertical_Transposition.h) - Add tests and simulation!
-  * [Rust double transposition](#rust_doub_tran) - Add implementation and tests and simulation!
-  * [Rust transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/Rust/transposition.rs) - Add tests and simulation!
-  * [Rust vertical transposition](https://github.com/Andezion/Encryption/blob/main/Transposition/Rust/vertical_transposition) - Add tests and simulation!
-  * [C double transposition](#c_doub_tran) - Add implementation and tests and simulation!
-  * [C transposition](#c_tran) - Add implementation and tests and simulation!
-  * [C vertical transposition](#c_ver_tran) - Add implementation and tests and simulation!
-  * [Zig double transposition](#zig_doub_tran) - Add implementation and tests and simulation!
-  * [Zig transposition](#zig_tran) - Add implementation and tests and simulation!
-  * [Zig vertical transposition](#zig_ver_tran) - Add implementation and tests and simulation!
 * [Vigenere](#vigenere) - Each letter is encrypted with a Caesar cipher shifted by the corresponding key letter.
-  * [C++](https://github.com/Andezion/Encryption/blob/main/Vigenere/C%2B%2B/Vigenere.h)  - Add tests and simulation!
-  * [Rust](https://github.com/Andezion/Encryption/blob/main/Vigenere/Rust/vigenere.rs) - Add tests and simulation!
-  * [C](#c_vigenere) - Add implementation and tests and simulation!
-  * [Zig](#zig_vigenere) - Add implementation and tests and simulation!
- 
+
 ---
 
 ## ANS
