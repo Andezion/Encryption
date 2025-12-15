@@ -2,8 +2,8 @@
 Experiments with encryption, information compression and algorithms
 
 ## Content
-* [AES](#aes) -
-* [ANS](#ans) - ANS-based compression and coding algorithms.
+* [AES](#aes) - С/С++
+* [ANS](#ans) - 
 * [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
 * [BWT](#bwt)
