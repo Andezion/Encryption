@@ -3,8 +3,8 @@ Experiments with encryption, information compression and algorithms
 
 ## Content
 * [AES](#aes) - С/С++
-* [ANS](#ans) - 
-* [Affine](#affine) - is a special case of the more general monoalphabetic substitution cipher.
+* [ANS](#ans) - С/C++/Rust
+* [Affine](#affine) - С/C++/Rust
 * [Atbash](#atbash) - is a monoalphabetic substitution cipher originally used to encrypt the Hebrew alphabet.
 * [BWT](#bwt)
 * [Caesar](#caesar) - is one of the simplest and most widely known encryption techniques.
