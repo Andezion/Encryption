@@ -1,8 +1,7 @@
-
 # Fleissner Grille Cipher
 
-Overview
---------
+*Short description:*
+
 This folder contains an implementation of the Fleissner (Fleissner grille) transposition cipher. The Fleissner grille uses a perforated mask (grille) rotated over a text grid to determine the order of writing or reading characters.
 
 Files
