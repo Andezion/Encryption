@@ -1,8 +1,7 @@
-
 # LZ77 Compression
 
-Overview
---------
+*Short description:*
+
 This folder contains a simple implementation of the LZ77 lossless compression algorithm. LZ77 works by replacing repeated occurrences of data with references to a single copy existing earlier in the data stream.
 
 Files
