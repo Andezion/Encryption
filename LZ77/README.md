@@ -9,11 +9,8 @@ This folder contains a simple implementation of the LZ77 lossless compression al
 - `C++/LZ77.h` — header with LZ77 encoder/decoder logic.
 - `C++/LZ77_Test.cpp` — example/test harness to demonstrate compression and decompression.
 
-Notes
------
+**Algorithm (brief):**
+
 - This implementation is intended for educational purposes; production-quality LZ77 implementations use optimized sliding windows and efficient bit/byte packing.
 
-References
-----------
-- Ziv, J., & Lempel, A. (1977). A universal algorithm for sequential data compression.
 
