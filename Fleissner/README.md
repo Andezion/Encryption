@@ -4,8 +4,8 @@
 
 This folder contains an implementation of the Fleissner (Fleissner grille) transposition cipher. The Fleissner grille uses a perforated mask (grille) rotated over a text grid to determine the order of writing or reading characters.
 
-Files
------
+**Implementation:** 
+
 - `C++/FleissnerGrille.h` — C++ header with Fleissner grille routines and helpers.
 
 Build & Usage
