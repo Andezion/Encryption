@@ -5,7 +5,7 @@
 Substitution ciphers replace each symbol in the plaintext with another symbol according to a fixed mapping (monoalphabetic) or multiple mappings (polyalphabetic). They are fundamental manual ciphers and building blocks for more complex schemes.
 
 **Implementation:**
-- Implementations and tests may be present in C++ and Rust subdirectories.
+- Implementations and tests may be present in C, C++ and Rust subdirectories.
 
 **Algorithm (brief):**
 
