@@ -5,7 +5,7 @@
 Scytale is an ancient transposition cipher that arranges text along a strip wound around a rod of a given circumference. Reading characters along the rod produces the ciphertext; unwinding yields the original text when the same circumference is used.
 
 **Implementation:**
-- Implementations and tests may be present in C++ and Rust subdirectories.
+- Implementations and tests may be present in C, C++ and Rust subdirectories.
 
 **Algorithm (brief):**
 
