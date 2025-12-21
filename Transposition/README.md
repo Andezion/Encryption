@@ -5,7 +5,7 @@
 Transposition ciphers reorder the characters of the plaintext according to some fixed scheme (e.g., columnar transposition, rail fence). They preserve the original symbols but change their positions.
 
 **Implementation:**
-- Implementations and tests may be present in C++ and Rust subdirectories.
+- Implementations and tests may be present in C, C++ and Rust subdirectories.
 
 **Algorithm (brief):**
 
