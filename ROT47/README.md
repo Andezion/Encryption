@@ -5,7 +5,7 @@
 ROT47 is a simple substitution cipher that rotates the 94 printable ASCII characters (from '!' to '~') by 47 positions. Like ROT13, it is symmetric but operates over a larger character set.
 
 **Implementation:**
-- Implementations and tests may be present in C and C++ subdirectories.
+- Implementations and tests may be present in C, Zig, Rust and C++ subdirectories.
 
 **Algorithm (brief):**
 
