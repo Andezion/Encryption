@@ -5,7 +5,7 @@
 The move-to-front transform is a reversible sequence transform that maintains an ordered list of symbols and outputs the index of each symbol while moving that symbol to the front. MTF is often used as a preprocessing step before entropy coding to exploit locality.
 
 **Implementation:**
-- Implementations and tests may be present in C++ and Rust subdirectories.
+- Implementations and tests may be present in C++ subdirectory.
 
 **Algorithm (brief):**
 
