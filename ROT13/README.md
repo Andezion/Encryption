@@ -5,7 +5,7 @@
 ROT13 is a simple substitution cipher that rotates each letter by 13 positions in the Latin alphabet. It is symmetric (encoding and decoding are the same operation) and often used for obfuscation rather than security.
 
 **Implementation:**
-- Implementations and tests may be present in C++, C and Rust subdirectories.
+- Implementations and tests may be present in C++, C, Zig and Rust subdirectories.
 
 **Algorithm (brief):**
 
