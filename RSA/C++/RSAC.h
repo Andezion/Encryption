@@ -98,25 +98,41 @@ public:
         return out.str();
     }
 
-    // Decode space-separated hex blocks into plaintext (requires private key)
-    std::string decode(const std::string& ciphertext) const {
-        if (n == 0 || d == 0) throw std::runtime_error("private key not set");
+    std::string decode(const std::string& ciphertext) const
+    {
+        if (n == 0 || d == 0)
+        {
+            throw std::runtime_error("private key not set");
+        }
+
         std::istringstream iss(ciphertext);
+
         std::string token;
         std::string result;
-        while (iss >> token) {
-            cpp_int c = from_hex(token);
-            cpp_int m = powmod(c, d, n);
+
+        while (iss >> token)
+        {
+            size_t c = from_hex(token);
+            size_t m = powmod(c, d, n);
+
             std::string chunk = int_to_string(m, block_bytes);
             result += chunk;
         }
         return result;
     }
 
-    // Accessors to retrieve raw key components
-    cpp_int get_n() const { return n; }
-    cpp_int get_e() const { return e; }
-    cpp_int get_d() const { return d; }
+    size_t get_n() const
+    {
+        return n;
+    }
+    size_t get_e() const
+    {
+        return e;
+    }
+    size_t get_d() const
+    {
+        return d;
+    }
 
 private:
     cpp_int p{0}, q{0}, n{0}, e{0}, d{0};
