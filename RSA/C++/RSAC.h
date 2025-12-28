@@ -9,41 +9,46 @@
 #include <algorithm>
 #include <stdexcept>
 
-
 class RSA
 {
 public:
-    explicit RSA(unsigned bits = 512)
+    explicit RSA(const unsigned bits = 512)
     {
       generate_keys(bits);
     }
 
-    void generate_keys(unsigned bits = 512)
+    static void generate_keys(unsigned bits = 512)
     {
         if (bits < 64)
         {
             bits = 64;
         }
 
-        unsigned pbits = bits / 2;
-        unsigned qbits = bits - pbits;
+        p = generate_prime(bits / 2);
+        q = generate_prime(bits - bits / 2);
 
-        p = generate_prime(pbits);
-        q = generate_prime(qbits);
         n = p * q;
-        cpp_int phi = (p - 1) * (q - 1);
+
+        size_t phi = (p - 1) * (q - 1);
 
         e = 65537;
-        if (gcd(e, phi) != 1) {
+
+        if (gcd(e, phi) != 1)
+        {
             e = 3;
-            while (gcd(e, phi) != 1) e += 2;
+            while (gcd(e, phi) != 1)
+            {
+                e += 2;
+            }
         }
 
         d = modinv(e, phi);
-        if (d == 0) throw std::runtime_error("failed to compute modular inverse for d");
+        if (d == 0)
+        {
+            throw std::runtime_error("failed to compute modular inverse for d");
+        }
 
         block_bytes = static_cast<size_t>((msb(n) - 1) / 8);
-        if (block_bytes == 0) block_bytes = 1;
     }
 
     // Set existing public key (n, e)
