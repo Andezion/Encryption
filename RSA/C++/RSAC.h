@@ -51,23 +51,47 @@ public:
         block_bytes = static_cast<size_t>((msb(n) - 1) / 8);
     }
 
-    // Set existing public key (n, e)
-    void set_public(const cpp_int& N, const cpp_int& E) { n = N; e = E; block_bytes = std::max<size_t>(1, (msb(n)-1)/8); }
-    // Set existing private key (n, d)
-    void set_private(const cpp_int& N, const cpp_int& D) { n = N; d = D; block_bytes = std::max<size_t>(1, (msb(n)-1)/8); }
+    void set_public(const size_t& N, const size_t& E)
+    {
+        n = N;
+        e = E;
+        block_bytes = std::max<size_t>(1, (msb(n) - 1) / 8);
+    }
 
-    // Encode plaintext into space-separated hex blocks (requires public key)
-    std::string encode(const std::string& plaintext) const {
-        if (n == 0 || e == 0) throw std::runtime_error("public key not set");
+    void set_private(const size_t& N, const size_t& D)
+    {
+        n = N;
+        d = D;
+        block_bytes = std::max<size_t>(1, (msb(n) - 1) / 8);
+    }
+
+    std::string encode(const std::string& plaintext) const
+    {
+        if (n == 0 || e == 0)
+        {
+            throw std::runtime_error("public key not set");
+        }
+
         std::ostringstream out;
         bool first = true;
-        for (size_t i = 0; i < plaintext.size(); i += block_bytes) {
-            size_t len = std::min(block_bytes, plaintext.size() - i);
+
+        for (size_t i = 0; i < plaintext.size(); i += block_bytes)
+        {
+            const size_t len = std::min(block_bytes, plaintext.size() - i);
             std::string chunk = plaintext.substr(i, len);
-            cpp_int m = string_to_int(chunk);
-            if (m >= n) throw std::runtime_error("message block >= modulus");
-            cpp_int c = powmod(m, e, n);
-            if (!first) out << ' ';
+
+            size_t m = string_to_int(chunk);
+            if (m >= n)
+            {
+                throw std::runtime_error("message block >= modulus");
+            }
+
+            size_t c = powmod(m, e, n);
+            if (!first)
+            {
+                out << ' ';
+            }
+
             out << to_hex(c);
             first = false;
         }
