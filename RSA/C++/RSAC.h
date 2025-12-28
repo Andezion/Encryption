@@ -337,27 +337,46 @@ private:
         return std::string(v.begin(), v.end());
     }
 
-    static std::string to_hex(cpp_int x) {
-        if (x == 0) return "0";
+    static std::string to_hex(cpp_int x)
+    {
+        if (x == 0)
+        {
+            return "0";
+        }
         std::ostringstream oss;
         std::vector<unsigned char> v;
-        while (x > 0) { v.push_back(static_cast<unsigned char>(x & 0xFF)); x >>= 8; }
-        for (auto it = v.rbegin(); it != v.rend(); ++it) {
+
+        while (x > 0)
+        {
+            v.push_back(static_cast<unsigned char>(x & 0xFF));
+            x >>= 8;
+        }
+
+        for (auto it = v.rbegin(); it != v.rend(); ++it)
+        {
             oss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(*it);
         }
         return oss.str();
     }
 
-    // Hex string to integer
-    static cpp_int from_hex(const std::string& hex) {
-        cpp_int res = 0;
+    static size_t from_hex(const std::string& hex)
+    {
+        size_t res = 0;
         std::string h = hex;
-        if (h.size() % 2 == 1) h = "0" + h;
-        for (size_t i = 0; i < h.size(); i += 2) {
+
+        if (h.size() % 2 == 1)
+        {
+            h = "0" + h;
+        }
+        for (size_t i = 0; i < h.size(); i += 2)
+        {
             std::string byte = h.substr(i, 2);
             unsigned int val = 0;
+
             std::istringstream iss(byte);
+
             iss >> std::hex >> val;
+
             res <<= 8;
             res += val;
         }
