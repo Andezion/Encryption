@@ -10,15 +10,12 @@
 #include <algorithm>
 #include <stdexcept>
 
+using boost::multiprecision::cpp_int;
 
-// Class `RSA` — key generation, public/private accessors, and
-// block-based `encode` / `decode` using hex tokens separated by spaces.
 class RSA {
 public:
-    // Constructs and generates a keypair of approximately `bits` length.
     explicit RSA(unsigned bits = 512) { generate_keys(bits); }
 
-    // Generate new keypair (approximate total bits)
     void generate_keys(unsigned bits = 512) {
         if (bits < 64) bits = 64;
         unsigned pbits = bits / 2;
@@ -241,5 +238,5 @@ private:
     }
 };
 
-} 
+
 
