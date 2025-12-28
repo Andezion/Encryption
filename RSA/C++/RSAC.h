@@ -271,51 +271,72 @@ private:
         return true;
     }
 
-    cpp_int generate_prime(unsigned bits) const {
-        if (bits < 2) bits = 2;
+    static size_t generate_prime(unsigned bits)
+    {
+        if (bits < 2)
+        {
+            bits = 2;
+        }
+
         std::mt19937_64 rng(static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
         std::uniform_int_distribution<uint64_t> dist;
 
-        while (true) {
-            cpp_int x = 0;
+        while (true)
+        {
+            size_t x = 0;
             unsigned produced = 0;
-            while (produced < bits) {
+            while (produced < bits)
+            {
                 x <<= 64;
                 x += dist(rng);
                 produced += 64;
             }
-            unsigned extra = produced - bits;
-            if (extra > 0) x >>= extra;
-            x |= (cpp_int(1) << (bits - 1));
+
+            const unsigned extra = produced - bits;
+
+            if (extra > 0)
+            {
+                x >>= extra;
+            }
+
+            x |= static_cast<size_t>(1) << bits - 1;
             x |= 1;
-            if (is_probable_prime(x, 16)) return x;
+            if (is_probable_prime(x, 16))
+            {
+                return x;
+            }
         }
     }
 
-    // Convert raw bytes string to integer
-    static cpp_int string_to_int(const std::string& s) {
-        cpp_int x = 0;
-        for (unsigned char c : std::vector<unsigned char>(s.begin(), s.end())) {
+    static size_t string_to_int(const std::string& s)
+    {
+        size_t x = 0;
+        for (const unsigned char c : std::vector<unsigned char>(s.begin(), s.end()))
+        {
             x <<= 8;
             x += c;
         }
         return x;
     }
 
-    // Convert integer to raw bytes string of fixed length (pad with leading zeros)
-    static std::string int_to_string(cpp_int x, size_t bytes) {
+    static std::string int_to_string(size_t x, const size_t bytes)
+    {
         std::vector<unsigned char> v;
-        while (x > 0) {
-            unsigned char b = static_cast<unsigned char>(x & 0xFF);
+        while (x > 0)
+        {
+            auto b = static_cast<unsigned char>(x & 0xFF);
             v.push_back(b);
             x >>= 8;
         }
-        while (v.size() < bytes) v.push_back(0);
+
+        while (v.size() < bytes)
+        {
+            v.push_back(0);
+        }
         std::reverse(v.begin(), v.end());
         return std::string(v.begin(), v.end());
     }
 
-    // Integer to hex string (big-endian)
     static std::string to_hex(cpp_int x) {
         if (x == 0) return "0";
         std::ostringstream oss;
