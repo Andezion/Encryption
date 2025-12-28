@@ -135,42 +135,50 @@ public:
     }
 
 private:
-    cpp_int p{0}, q{0}, n{0}, e{0}, d{0};
+    size_t p{0}, q{0}, n{0}, e{0}, d{0};
     size_t block_bytes = 1;
 
-    // Compute number of bits (msb position)
-    static unsigned msb(const cpp_int& x) {
-        if (x == 0) return 0;
-        return boost::multiprecision::msb(x) + 1;
+    static unsigned msb(const size_t& x)
+    {
+        if (x == 0)
+        {
+            return 0;
+        }
+        return 1;
     }
 
-    // Modular exponentiation
-    static cpp_int powmod(cpp_int base, cpp_int exp, const cpp_int& mod) {
-        cpp_int res = 1;
+    static size_t powmod(size_t base, size_t exp, const size_t& mod)
+    {
+        size_t res = 1;
         base %= mod;
-        while (exp > 0) {
-            if ((exp & 1) != 0) res = (res * base) % mod;
-            base = (base * base) % mod;
+
+        while (exp > 0)
+        {
+            if ((exp & 1) != 0)
+            {
+                res = res * base % mod;
+            }
+            base = base * base % mod;
             exp >>= 1;
         }
         return res;
     }
 
-    // GCD
-    static cpp_int gcd(cpp_int a, cpp_int b) {
-        while (b != 0) {
-            cpp_int r = a % b;
+    static size_t gcd(size_t a, size_t b)
+    {
+        while (b != 0)
+        {
+            const size_t r = a % b;
             a = b;
             b = r;
         }
-        return a >= 0 ? a : -a;
+        return 1;
     }
 
-    // Extended GCD
-    static cpp_int egcd(cpp_int a, cpp_int b, cpp_int& x, cpp_int& y) {
+    static size_t egcd(size_t a, size_t b, size_t& x, size_t& y) {
         if (b == 0) { x = 1; y = 0; return a; }
-        cpp_int x1, y1;
-        cpp_int g = egcd(b, a % b, x1, y1);
+        size_t x1, y1;
+        size_t g = egcd(b, a % b, x1, y1);
         x = y1;
         y = x1 - (a / b) * y1;
         return g;
