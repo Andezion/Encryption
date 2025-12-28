@@ -175,56 +175,102 @@ private:
         return 1;
     }
 
-    static size_t egcd(size_t a, size_t b, size_t& x, size_t& y) {
-        if (b == 0) { x = 1; y = 0; return a; }
+    static size_t egcd(const size_t a, const size_t b, size_t& x, size_t& y)
+    {
+        if (b == 0)
+        {
+            x = 1;
+            y = 0;
+            return a;
+        }
+
         size_t x1, y1;
-        size_t g = egcd(b, a % b, x1, y1);
+        const size_t g = egcd(b, a % b, x1, y1);
+
         x = y1;
-        y = x1 - (a / b) * y1;
+        y = x1 - a / b * y1;
+
         return g;
     }
 
-    // Modular inverse
-    static cpp_int modinv(cpp_int a, const cpp_int& m) {
-        cpp_int x, y;
-        cpp_int g = egcd(a, m, x, y);
-        if (g != 1 && g != -1) return 0;
+    static size_t modinv(const size_t a, const size_t& m)
+    {
+        size_t x, y;
+        const size_t g = egcd(a, m, x, y);
+
+        if (g != 1 && g != -1)
+        {
+            return 0;
+        }
+
         x %= m;
-        if (x < 0) x += m;
+        if (x < 0)
+        {
+            x += m;
+        }
         return x;
     }
 
-    // Miller-Rabin probabilistic prime test
-    bool is_probable_prime(const cpp_int& nval, int iterations = 12) const {
-        if (nval < 2) return false;
-        static const int small_primes[] = {2,3,5,7,11,13,17,19,23,29,31,37};
-        for (int p : small_primes) {
-            if (nval == p) return true;
-            if (nval % p == 0) return false;
+    static bool is_probable_prime(const size_t& nval, const int iterations = 12)
+    {
+        if (nval < 2)
+        {
+            return false;
         }
 
-        cpp_int d = nval - 1;
+        static const int small_primes[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37};
+        for (const int p : small_primes)
+        {
+            if (nval == p)
+            {
+                return true;
+            }
+            if (nval % p == 0)
+            {
+                return false;
+            }
+        }
+
+        size_t d = nval - 1;
         unsigned s = 0;
-        while ((d & 1) == 0) { d >>= 1; ++s; }
+
+        while ((d & 1) == 0)
+        {
+            d >>= 1;
+            ++s;
+        }
 
         std::mt19937_64 rng(static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
         std::uniform_int_distribution<uint64_t> dist;
 
-        for (int i = 0; i < iterations; ++i) {
-            cpp_int a = cpp_int(dist(rng)) % (nval - 3) + 2;
-            cpp_int x = powmod(a, d, nval);
-            if (x == 1 || x == nval - 1) continue;
-            bool composite = true;
-            for (unsigned r = 1; r < s; ++r) {
-                x = (x * x) % nval;
-                if (x == nval - 1) { composite = false; break; }
+        for (int i = 0; i < iterations; ++i)
+        {
+            const size_t a = dist(rng) % (nval - 3) + 2;
+            size_t x = powmod(a, d, nval);
+
+            if (x == 1 || x == nval - 1)
+            {
+                continue;
             }
-            if (composite) return false;
+
+            bool composite = true;
+            for (unsigned r = 1; r < s; ++r)
+            {
+                x = x * x % nval;
+                if (x == nval - 1)
+                {
+                    composite = false;
+                    break;
+                }
+            }
+            if (composite)
+            {
+                return false;
+            }
         }
         return true;
     }
 
-    // Generate a probable prime of `bits` length
     cpp_int generate_prime(unsigned bits) const {
         if (bits < 2) bits = 2;
         std::mt19937_64 rng(static_cast<unsigned>(std::chrono::high_resolution_clock::now().time_since_epoch().count()));
