@@ -1,5 +1,4 @@
-
-#pragme once
+#pragma once
 
 #include <string>
 #include <vector>
@@ -10,14 +9,22 @@
 #include <algorithm>
 #include <stdexcept>
 
-using boost::multiprecision::cpp_int;
 
-class RSA {
+class RSA
+{
 public:
-    explicit RSA(unsigned bits = 512) { generate_keys(bits); }
+    explicit RSA(unsigned bits = 512)
+    {
+      generate_keys(bits);
+    }
 
-    void generate_keys(unsigned bits = 512) {
-        if (bits < 64) bits = 64;
+    void generate_keys(unsigned bits = 512)
+    {
+        if (bits < 64)
+        {
+            bits = 64;
+        }
+
         unsigned pbits = bits / 2;
         unsigned qbits = bits - pbits;
 
